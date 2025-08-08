@@ -6,7 +6,13 @@ import {icons} from "@/constants/icons"; // Import the icons
 import {images} from "@/constants/images";
 import React from "react";
 
-const TabIcon = ({focused, icon, text}:any) => {
+interface TabIconProps {
+    focused: boolean;
+    icon: any;
+    text: string;
+}
+
+const TabIcon = ({focused, icon, text}: TabIconProps) => {
     if(focused) {
         return (
             <>
@@ -49,6 +55,7 @@ export default function TabLayout() {
                     tabBarIcon: ({focused})=> (
                         <TabIcon focused = {focused} icon = {icons.home}  text = "Home" />
                     )
+                    
 
                 }}
 
