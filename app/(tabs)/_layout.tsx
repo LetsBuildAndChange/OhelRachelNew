@@ -31,8 +31,17 @@ const TabIcon = ({focused, icon, text}:any) => {
 
 export default function TabLayout() {
     return(
-        <Tabs>
-            <Tabs.Screen
+        <Tabs screenOptions={{
+            tabBarShowLabel: false,
+            tabBarStyle: {
+                height: 70,
+                backgroundColor: '#FFFFFF',
+                borderTopWidth: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }
+        }}>
+        <Tabs.Screen
                 name = "index"
                 options = {{
                     title: "Home",
