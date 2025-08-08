@@ -23,7 +23,7 @@ export default function MinyanTimes() {
             ))}
             <Text className="text-2xl font-bold mt-10 text-center">Weekday Minyan Times</Text>
             {minyanTimes.map((minyan, idx) => (
-                <View key={idx} className="flex-row items-center justify-between mb-4 p-4 rounded-xl bg-primary shadow">
+                <View key={idx} className="flex-row items-center justify-between mb-4 p-4 rounded-xl bg-light-200 shadow">
                     <View className="flex-row items-center space-x-3">
                         {/*{minyan.icon}*/}
                         <Text className="text-lg font-semibold">{minyan.name}</Text>
