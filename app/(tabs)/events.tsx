@@ -10,10 +10,32 @@ const minyanTimes = [
 
 export default function MinyanTimes() {
     return (
-        
+        <ScrollView className="p-4 bg-gray-100">
+            <Text className="text-2xl font-bold mt-10 text-center">Weekday Minyan Times</Text>
+            {minyanTimes.map((minyan, idx) => (
+                <View key={idx} className="flex-row items-center justify-between mb-4 p-4 rounded-xl bg-primary shadow">
+                    <View className="flex-row items-center space-x-3">
+                        {/*{minyan.icon}*/}
+                        <Text className="text-lg font-semibold">{minyan.name}</Text>
+                    </View>
+                    <Text className="text-lg">{minyan.time}</Text>
+                </View>
+            ))}
+            <Text className="text-2xl font-bold mt-10 text-center">Weekday Minyan Times</Text>
+            {minyanTimes.map((minyan, idx) => (
+                <View key={idx} className="flex-row items-center justify-between mb-4 p-4 rounded-xl bg-primary shadow">
+                    <View className="flex-row items-center space-x-3">
+                        {/*{minyan.icon}*/}
+                        <Text className="text-lg font-semibold">{minyan.name}</Text>
+                    </View>
+                    <Text className="text-lg">{minyan.time}</Text>
+                </View>
+            ))}
+        </ScrollView>
+
+
         // <View>
         //     <Text>MinyanTimes</Text>
-        // </View>
         // <ScrollView className="p-4">
         //     <Text className="text-2xl font-bold mt-10 text-center">Weekday Minyan Times</Text>
         //     {minyanTimes.map((minyan, idx) => (
@@ -26,37 +48,10 @@ export default function MinyanTimes() {
         //         </View>
         //     ))}
         //     </ScrollView>
-        <SafeAreaView className="flex-1 bg-gray-100">
-            <ScrollView className="pt-8">
-                <Text className="text-2xl font-bold text-center mb-6">
-                    Weekday Minyan Times
-                </Text>
-
-                {minyanTimes.map((minyan, idx) => (
-                    <View
-                        key={idx}
-                        className="
-              bg-white
-              mx-4
-              py-4 px-6
-              mb-4
-              rounded-full
-              border border-gray-200
-              shadow
-              elevation-2
-            "
-                    >
-                        <View className="flex-row justify-between items-center">
-                            <Text className="text-lg font-semibold">{minyan.name}</Text>
-                            <Text className="text-lg">{minyan.time}</Text>
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
-        </SafeAreaView>
-        // <SafeAreaView className="flex-1 bg-gray-100">
-        //     <ScrollView className="pt-8">
-        //         <Text className="text-2xl font-bold text-center mb-6">
+        // </View>
+        // <SafeAreaView className="flex-1">
+        //     <ScrollView className="pt-8 bg-blue-50">
+        //         <Text className="text-2xl font-bold text-center mt-4 mb-6">
         //             Weekday Minyan Times
         //         </Text>
         //
@@ -69,14 +64,13 @@ export default function MinyanTimes() {
         //       py-4 px-6
         //       mb-4
         //       rounded-full
-        //       shadow-lg
-        //       elevation-3
+        //       border border-gray-200
+        //       shadow
+        //       elevation-2
         //     "
         //             >
         //                 <View className="flex-row justify-between items-center">
-        //                     <Text className="text-lg font-semibold">
-        //                         {minyan.name}
-        //                     </Text>
+        //                     <Text className="text-lg font-semibold">{minyan.name}</Text>
         //                     <Text className="text-lg">{minyan.time}</Text>
         //                 </View>
         //             </View>
