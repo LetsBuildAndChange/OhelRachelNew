@@ -41,7 +41,7 @@ export default function TabLayout() {
             tabBarShowLabel: false,
             tabBarStyle: {
                 height: 70,
-                backgroundColor: '#FFFFFF',
+                backgroundColor: '#ffffff',
                 borderTopWidth: 0,
                 justifyContent: 'center',
                 alignItems: 'center',
