@@ -1,7 +1,5 @@
 import {Text, View, Image, ImageBackground} from "react-native";
 import {Tabs} from "expo-router";
-import {ImageBackground} from "react-native";
-import {Image} from "react-native";
 import {icons} from "@/constants/icons"; // Import the icons
 import {images} from "@/constants/images";
 import React from "react";
