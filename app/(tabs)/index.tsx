@@ -6,7 +6,8 @@ export default function IndexContent() {
     return (
      <View className={"flex-1 bg-primary"}>
       <ScrollView>
-      <Text className={"text-5xl font-bold mt-20 mb-3 text-center w-full"} style={{ color: '#000000' }}>Welcome!</Text>
+      <Text className={"text-3xl font-bold mt-20 mb-3 text-center w-full color-dark-200"}>
+          Welcome to Ohel Rachel!</Text>
           <Image
               source={images.newlogo}
               style={{
@@ -21,10 +22,19 @@ export default function IndexContent() {
               fadeDuration={0}
               progressiveRenderingEnabled={true}
           />
-          <Text className="text-lg text-center px-6 mb-8" style={{color: '#000000'}}>
-              Welcome to Ohel Rachel! We're delighted to have you here. Explore our events, lectures, and ways to
+          <View className={"flex-row items-center justify-between mb-4 p-4 rounded-xl bg-fourth"}>
+          <Text className="text-lg text-center">
+              We are delighted to have you here! Explore our events, lectures, and ways to
               contribute to our thriving community.
           </Text>
+          </View>
+          <View className={"flex-row items-center justify-between mb-4 p-4 rounded-xl bg-fourth"}>
+          <Text className="text-lg text-center">
+              Upcoming Events:
+              Join us for Kiddush after Shacharit 9:00 am Minyan!
+              Stay tuned for the new building updates!
+          </Text>
+          </View>
 
       </ScrollView>
     </View>
