@@ -29,10 +29,10 @@ export default function IndexContent() {
           </Text>
           </View>
           <View className={"flex-row items-center justify-between mb-4 p-4 rounded-xl bg-fourth"}>
-          <Text className="text-lg text-center">
-              Upcoming Events:
-              Join us for Kiddush after Shacharit 9:00 am Minyan!
-              Stay tuned for the new building updates!
+          <Text className="text-lg text-left">
+              Upcoming Events: {"\n"}
+              Join us for Kiddush after Shacharit 9:00 am Minyan! {"\n"}
+              Stay tuned for the new building updates! {"\n"}
           </Text>
           </View>
 
