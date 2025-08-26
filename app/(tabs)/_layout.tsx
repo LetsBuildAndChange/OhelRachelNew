@@ -64,8 +64,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name = "events"
                 options = {{
-                    title: "Events",
-                    headerShown: false,
+                    title: "Minyan Times",
                     tabBarIcon: ({focused})=> (
                         <TabIcon focused = {focused} icon = {icons.event}  text = "Events" />
                     )
