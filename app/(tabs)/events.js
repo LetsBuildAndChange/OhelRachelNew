@@ -1,7 +1,8 @@
-import { collection, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, View } from 'react-native';
 import {db} from "./Firebase";
+import { collection, onSnapshot } from "firebase/firestore"
+
 const weekdayTimes = [
     {id:"local-1", name: 'Selichot#1', time: '5:00 AM' },
     {id:"local-2", name: 'Shacharit', time: '7:30 AM' },
@@ -48,12 +49,12 @@ export default function MinyanTimes() {
     //     .catch((error) => {
     //         console.error("Error writing document: ", error);
     //     });
-    console.log(PrayerName);
+    console.log(MinyanTimes);
     const renderItem = ({item}) => (
 
         <View className="flex-row items-center justify-between mb-4 p-4 rounded-xl bg-light-200 shadow">
             <Text>
-                {item.PrayerName}
+                {item.Time}
             </Text>
 
             <Text clsssName="text-lg">{item.Time}
