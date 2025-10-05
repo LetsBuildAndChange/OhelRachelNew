@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { FlatList, Text, View } from 'react-native';
+import React, {useEffect, useState} from "react";
+import {FlatList, ScrollView, Text, View} from 'react-native';
 import {db} from "./Firebase";
-import { collection, onSnapshot } from "firebase/firestore"
+import {collection, onSnapshot} from "firebase/firestore"
 
 const weekdayTimes = [
     {id:"local-1", name: 'Selichot#1', time: '5:00 AM' },
@@ -12,24 +12,43 @@ const weekdayTimes = [
     // { name: 'Maariv', time: '8:45 PM'},
 ];
 
-export default function MinyanTimes() {
+function MinyanTimes() {
     const [minyanTimes, setMinyanTimes] = useState([]);
     const [loading, setLoading] = useState(true);
 
 
-    useEffect(() => {
-        setLoading(true);
-        const UserQuery = collection(db, "PrayerName");
-        
-        onSnapshot(UserQuery, (snapshot)=> {
-            let userList = [];
-            snapshot.docs.map((doc) => {
-                 userList.push({...doc.data(), id: doc.id}, [])})
-                setMinyanTimes(userList);
-                setLoading(false);
-            
-        })
-    }, [])
+
+        useEffect(() => {
+            setLoading(true);
+            const q = collection(db, "PrayerName");
+            const unsub = onSnapshot(
+                q,
+                (snap) => {
+                    const list = snap.docs.map((doc) => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    // @ts-ignore
+                    setMinyanTimes(list);
+                    setLoading(false);
+                },
+                () => setLoading(false)
+            );
+            return unsub;
+        }, []);
+    // useEffect(() => {
+    //     setLoading(true);
+    //     const UserQuery = collection(db, "PrayerName");
+    //
+    //     onSnapshot(UserQuery, (snapshot)=> {
+    //         let userList = [];
+    //         snapshot.docs.map((doc) => {
+    //              userList.push({...doc.data(), id: doc.id}, [])})
+    //             setMinyanTimes(userList);
+    //             setLoading(false);
+    //
+    //     })
+    // }, [])
 
     // Add a new document in collection "cities"
    // const addData1 = asnyc () => {await setDoc(doc(db, "cities", "LA"), {
@@ -49,43 +68,35 @@ export default function MinyanTimes() {
     //     .catch((error) => {
     //         console.error("Error writing document: ", error);
     //     });
-    console.log(MinyanTimes);
-    const renderItem = ({item}) => (
-
-        <View className="flex-row items-center justify-between mb-4 p-4 rounded-xl bg-light-200 shadow">
-            <Text>
-                {item.Time}
-            </Text>
-
-            <Text clsssName="text-lg">{item.Time}
-            </Text>
+    console.log(minyanTimes);
+    /** @param {import('react-native').ListRenderItemInfo<any>} param0*/
+    const renderItem = ({ item }) => (
+        <View className="flex-row items-center justify-between ml-1 mr-1 mb-4 p-3 rounded-3xl bg-light-200">
+            <Text className="text-lg font-semibold">{item.PrayerName}</Text>
+            <Text className="text-lg">{item.Time}</Text>
         </View>
+    );
 
-    )
+    if (loading) return <Text>Loading…</Text>;
+
     return (
 
         <View className="p-4 bg-gray-100">
-            <Text className="text-2xl font-bold mt-3 text-center">Weekday Minyan Times</Text>
-            <FlatList data={minyanTimes}
-                      renderItem={renderItem}
-                      keyExtractor={item => item.id}
-                      />
-        </View>
+
+
+            <FlatList
+                ListHeaderComponent={
+                    <Text className="text-2xl font-bold mt-3 text-center">Weekday Minyan Times</Text>
+                }
+                data={minyanTimes}
+                keyExtractor={(item) => String(item.id)}
+                renderItem={renderItem}
+            />
+
+       </View>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default MinyanTimes;
 
 
 
