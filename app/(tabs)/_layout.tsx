@@ -14,7 +14,7 @@ const TabIcon = ({focused, icon, text}: TabIconProps) => {
     if(focused) {
         return (
             <>
-                <ImageBackground source={images.highlight}
+                <ImageBackground
                                  className="flex flex-row w-full flex-1 min-w-[100px] min-h-14 mt-4 justify-center
                                   items-center rounded-full overflow-hidden ">
                     <Image source={icon}
@@ -63,6 +63,7 @@ export default function TabLayout() {
                 name = "events"
                 options = {{
                     title: "Minyan Times",
+                    headerShown: false,
                     tabBarIcon: ({focused})=> (
                         <TabIcon focused = {focused} icon = {icons.event}  text = "Events" />
                     )

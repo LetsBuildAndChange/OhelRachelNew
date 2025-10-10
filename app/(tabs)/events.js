@@ -86,7 +86,7 @@ function MinyanTimes() {
 
             <FlatList
                 ListHeaderComponent={
-                    <Text className="text-2xl font-bold mt-3 text-center">Weekday Minyan Times</Text>
+                    <Text className="text-2xl font-bold mt-4 mb-1 text-center">Weekday Minyan Times</Text>
                 }
                 data={minyanTimes}
                 keyExtractor={(item) => String(item.id)}
@@ -165,22 +165,5 @@ export default MinyanTimes;
     //     </ScrollView>
     // </SafeAreaView>
 
-//     <ScrollView className="p-4 bg-gray-100">
-//         <Text className="text-2xl font-bold mt-3 text-center">Weekday Minyan Times</Text>
-//
-//         <View>
-//             {weekdayTimes.map((minyan, idx) => (
-//                 <View key={idx}
-//                       className="flex-row items-center justify-between mb-4 p-4 rounded-xl bg-light-200 shadow">
-//                     <View className="flex-row items-center space-x-3">
-//                         <Text className="text-lg font-semibold">{minyan.name}</Text>
-//                     </View>
-//                     <Text className="text-lg">{minyan.time}</Text>*
-//
-//                 </View>
-//             ))}
-//         </View>
-//     </ScrollView>
-//
 
 
