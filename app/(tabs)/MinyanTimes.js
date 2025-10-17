@@ -81,7 +81,7 @@ function MinyanTimes() {
 
     return (
 
-        <View className="p-4 bg-gray-100">
+        <ScrollView className="p-4 bg-gray-100">
 
 
             <FlatList
@@ -92,8 +92,16 @@ function MinyanTimes() {
                 keyExtractor={(item) => String(item.id)}
                 renderItem={renderItem}
             />
+            <FlatList
+                ListHeaderComponent={
+                    <Text className="text-2xl font-bold mt-4 mb-1 text-center">Shabbat Minyan Times</Text>
+                }
+                data={minyanTimes}
+                keyExtractor={(item) => String(item.id)}
+                renderItem={renderItem}
+            />
 
-       </View>
+       </ScrollView>
     );
 }
 export default MinyanTimes;

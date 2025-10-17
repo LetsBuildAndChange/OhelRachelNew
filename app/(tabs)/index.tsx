@@ -70,7 +70,7 @@ export default function HomeScreen() {
                 <View style={{ alignItems: "center", marginBottom: 20 }}>
                     <Image
                         source={images.newlogo}
-                        style={{ width: 96, height: 96, marginBottom: 12, resizeMode: "contain" }}
+                        style={{ width: 150, height: 150, marginBottom: 8, resizeMode: "contain" }}
                     />
                     <Text style={{ fontSize: 28, fontWeight: "700", color: BRAND.text }}>
                         Ohel Rachel

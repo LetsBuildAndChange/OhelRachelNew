@@ -60,15 +60,26 @@ export default function TabLayout() {
 
             />
             <Tabs.Screen
-                name = "events"
+                name = "MinyanTimes"
                 options = {{
                     title: "Minyan Times",
                     headerShown: false,
                     tabBarIcon: ({focused})=> (
-                        <TabIcon focused = {focused} icon = {icons.event}  text = "Events" />
+                        <TabIcon focused = {focused} icon = {icons.torahbook}  text = "Times" />
                     )
 
                 }}
+            />
+            <Tabs.Screen
+                name="Events"
+                options={{
+                    title: "Events",
+                    headerShown: false,
+                    tabBarIcon:({focused})=>(
+                        <TabIcon focused = {focused} icon = {icons.event}  text = "Events" />
+                    )
+                }
+                }
             />
             <Tabs.Screen
                 name = "videos"
