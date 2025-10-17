@@ -89,8 +89,8 @@ const DonationScreen: React.FC = () => {
     const venmoWeb = `https://venmo.com/u/${CONFIG.VENMO_HANDLE}`;
 
     return (
-        <ScrollView contentContainerStyle={{ paddingBottom: 40 }} className="bg-#F8FAFC px-5">
-            <Text className="text-[#0F172A] font-extrabold text-[28px] mt-6 mb-1">Support Our Community</Text>
+        <ScrollView className="bg-#F8FAFC px-5">
+            <Text className="text-[#0F172A] font-extrabold text-[28px] mt-9 mb-1">Support Our Community</Text>
             <Text className="text-[#0F172A] text-base leading-6 mb-4">Thank you for helping us sustain programs, services, and Torah learning.</Text>
 
             {/* Credit Card via PayPal */}
