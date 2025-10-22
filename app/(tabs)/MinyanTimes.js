@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {FlatList, ScrollView, Text, View} from 'react-native';
+import {FlatList, Platform, ScrollView, Text, View} from 'react-native';
 import {db} from "./Firebase";
 import {collection, onSnapshot} from "firebase/firestore"
+import { LinearGradient } from "expo-linear-gradient";
+
 
 const weekdayTimes = [
     {id:"local-1", name: 'Selichot#1', time: '5:00 AM' },
@@ -69,36 +71,69 @@ function MinyanTimes() {
     //         console.error("Error writing document: ", error);
     //     });
     console.log(minyanTimes);
-    /** @param {import('react-native').ListRenderItemInfo<any>} param0*/
+    const cardShadow =
+        Platform.OS === "ios"
+            ? {
+                shadowColor: "#000",
+                shadowOpacity: 0.08,
+                shadowRadius: 8,
+                shadowOffset: { width: 0, height: 2 },
+            }
+            : { elevation: 3 };
+
+    /** @param {import('react-native').ListRenderItemInfo<any>} param0 */
+
     const renderItem = ({ item }) => (
-        <View className="flex-row items-center justify-between ml-1 mr-1 mb-4 p-3 rounded-3xl bg-light-200">
-            <Text className="text-lg font-semibold">{item.PrayerName}</Text>
-            <Text className="text-lg">{item.Time}</Text>
+        <View className="mx-4 rounded-full overflow-hidden" style={cardShadow}>
+            <LinearGradient
+                colors={["#E8D4C0", "#F0E5D8"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+            >
+                {/* The flex-row MUST be inside the gradient */}
+                <View className="flex-row items-center justify-between p-4">
+                    <Text className="text-base font-semibold text-neutral-800">
+                        {item.PrayerName}
+                    </Text>
+                    <Text className="text-base text-neutral-800">{item.Time}</Text>
+                </View>
+            </LinearGradient>
         </View>
     );
+
 
     if (loading) return <Text>Loading…</Text>;
 
     return (
 
-        <ScrollView className="p-4 bg-gray-100">
-
-
+        <ScrollView
+            className="bg-neutral-50"
+            contentContainerClassName="py-8"
+            showsVerticalScrollIndicator={false}
+        >
             <FlatList
                 ListHeaderComponent={
-                    <Text className="text-2xl font-bold mt-4 mb-1 text-center">Weekday Minyan Times</Text>
+                    <Text className="text-center text-xl font-semibold text-neutral-800 mb-4">Weekday Minyan Times</Text>
                 }
                 data={minyanTimes}
                 keyExtractor={(item) => String(item.id)}
                 renderItem={renderItem}
+                ItemSeparatorComponent={() => <View className="h-3" />} // spacing between pills
+                scrollEnabled={false}                // inside ScrollView
+                removeClippedSubviews
+                contentContainerClassName="mb-8"
             />
             <FlatList
                 ListHeaderComponent={
-                    <Text className="text-2xl font-bold mt-4 mb-1 text-center">Shabbat Minyan Times</Text>
+                    <Text className="text-center font-semibold text-neutral-800 mb-4">Shabbat Minyan Times</Text>
                 }
                 data={minyanTimes}
                 keyExtractor={(item) => String(item.id)}
                 renderItem={renderItem}
+                ItemSeparatorComponent={() => <View className="h-3" />} // spacing between pills
+                scrollEnabled={false}                // inside ScrollView
+                removeClippedSubviews
+                contentContainerClassName="mb-8"
             />
 
        </ScrollView>
