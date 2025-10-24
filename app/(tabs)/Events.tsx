@@ -1,10 +1,14 @@
-import {View, Text} from "react-native";
+import {View, Text, ScrollView} from "react-native";
 import React from "react";
+import {Card} from "react-native-paper";
+
+
+
 const Events = () => {
     return(
-        <View>
-            <Text>Profile</Text>
-        </View>
+        <ScrollView className = "flex-1 mt-4">
+            <Text>Events</Text>
+        </ScrollView>
     )
 }
 

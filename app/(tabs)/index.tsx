@@ -47,7 +47,7 @@ import { SafeAreaView, ScrollView, View, Image, StatusBar } from "react-native";
 import { Text, Pressable } from "react-native";
 import {images} from "@/constants/images";
 
-const BRAND = {
+const Colors = {
     gold: "#D4AF37",     // <- your gold
     bg: "#F8FAFC",       // soft light background
     surface: "#FFFFFF",
@@ -63,7 +63,7 @@ type PrimaryButtonProps = {
 
 export default function HomeScreen() {
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: BRAND.bg }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bg }}>
             <StatusBar barStyle="dark-content" />
             <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 32 }}>
                 {/* Hero */}
@@ -72,10 +72,10 @@ export default function HomeScreen() {
                         source={images.newlogo}
                         style={{ width: 150, height: 150, marginBottom: 8, resizeMode: "contain" }}
                     />
-                    <Text style={{ fontSize: 28, fontWeight: "700", color: BRAND.text }}>
+                    <Text style={{ fontSize: 28, fontWeight: "700", color: Colors.text }}>
                         Ohel Rachel
                     </Text>
-                    <Text style={{ fontSize: 16, color: BRAND.muted, marginTop: 6, textAlign: "center" }}>
+                    <Text style={{ fontSize: 16, color: Colors.muted, marginTop: 6, textAlign: "center" }}>
                         Welcome — explore events, minyan times, and ways to contribute.
                     </Text>
                 </View>
@@ -83,7 +83,7 @@ export default function HomeScreen() {
                 {/* Info card */}
                 <Card>
                     <CardTitle>Welcome</CardTitle>
-                    <Text style={{ fontSize: 16, lineHeight: 22, color: BRAND.text }}>
+                    <Text style={{ fontSize: 16, lineHeight: 22, color: Colors.text }}>
                         We’re delighted to have you here. Discover our events and learning,
                         and see how to support the community.
                     </Text>
@@ -93,8 +93,8 @@ export default function HomeScreen() {
                 <Card>
                     <CardTitle>Upcoming</CardTitle>
                     <View style={{ gap: 6 }}>
-                        <Text style={{ fontSize: 16, color: BRAND.text }}>Kiddush after Shacharit — 9:00 AM</Text>
-                        <Text style={{ fontSize: 16, color: BRAND.text }}>New building updates coming soon</Text>
+                        <Text style={{ fontSize: 16, color: Colors.text }}>Kiddush after Shacharit — 9:00 AM</Text>
+                        <Text style={{ fontSize: 16, color: Colors.text }}>New building updates coming soon</Text>
                     </View>
                     <PrimaryButton
                         label="View all events"
@@ -111,11 +111,11 @@ function Card({ children }: PropsWithChildren) {
     return (
         <View
             style={{
-                backgroundColor: BRAND.surface,
+                backgroundColor: Colors.surface,
                 borderRadius: 16,
                 padding: 16,
                 borderWidth: 1,
-                borderColor: BRAND.border,
+                borderColor: Colors.border,
                 marginBottom: 16,
                 shadowColor: "#000",
                 shadowOpacity: 0.06,
@@ -131,7 +131,7 @@ function Card({ children }: PropsWithChildren) {
 
 function CardTitle({ children }: PropsWithChildren) {
     return (
-        <Text style={{ fontSize: 18, fontWeight: "700", color: BRAND.text, marginBottom: 8 }}>
+        <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 8 }}>
             {children}
         </Text>
     );
@@ -143,7 +143,7 @@ function PrimaryButton({ label, onPress }: PrimaryButtonProps) {
             onPress={onPress}
             style={({ pressed }) => ({
                 marginTop: 12,
-                backgroundColor: BRAND.gold,
+                backgroundColor: Colors.gold,
                 opacity: pressed ? 0.9 : 1,
                 borderRadius: 12,
                 paddingVertical: 12,
