@@ -1,9 +1,7 @@
 import React from "react";
-import { Linking, Platform, Share, Text, TouchableOpacity, View, ScrollView, Alert, Pressable } from "react-native";
-// If you're using Expo, uncomment this and `expo install expo-clipboard`
-// import * as Clipboard from "expo-clipboard";
-// If you're using bare RN, install: `@react-native-clipboard/clipboard`
-// import Clipboard from '@react-native-clipboard/clipboard';
+import { Alert, Linking, Platform, Pressable, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
+import {LinearGradient} from "expo-linear-gradient";
+
 
 /**
  * —— Quick setup ——
@@ -53,17 +51,33 @@ const shareText = async (message: string) => {
     }
 };
 
-const SectionCard: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+const SectionCard: React.FC<{ title: string; children: React.ReactNode; subsection: string }> = ({ title, children, subsection }) => (
     <View className="bg-[#FFFFFF] border-[#1f2b55] rounded-2xl p-4 mb-4 shadow-black/20 shadow-lg">
-        <Text className="text-[#0F172A] text-base font-bold mb-2">{title}</Text>
+        <Text className="text-[#0F172A] text-base font-bold">{title}</Text>
+        <Text className="text-sm text-gray-500">{subsection}</Text>
         {children}
     </View>
 );
+// const ActionButton: React.FC<{ label: string; onPress: () => void }> = ({ label, onPress }) => (
+//     <Pressable
+//         onPress={onPress}
+//         className="rounded-full overflow-hidden mb-2 active:opacity-90"
+//     >
+//         <LinearGradient
+//             colors={["#D6AE7B", "#B88A4A"]}
+//             start={{ x: 0, y: 0 }}
+//             end={{ x: 1, y: 1 }}
+//             className="h-12 rounded-full items-center justify-center"
+//         >
+//             <Text className="text-white font-semibold text-base lm-5">{label}</Text>
+//         </LinearGradient>
+//     </Pressable>
+// );
 
 const ActionButton: React.FC<{ label: string; onPress: () => void }>= ({ label, onPress }) => (
     <Pressable
         onPress={onPress}
-        className="bg-[#4c6fff] rounded-xl items-center justify-center py-3 px-4 mb-2 active:opacity-90"
+        className="bg-[#FFB302] rounded-xl items-center justify-center py-3 px-4 mb-2 active:opacity-90"
         android_ripple={{ color: "#283a99" }}
     >
         <Text className="text-white font-bold text-sm">{label}</Text>
@@ -94,8 +108,8 @@ const DonationScreen: React.FC = () => {
             <Text className="text-[#0F172A] text-base leading-6 mb-4">Thank you for helping us sustain programs, services, and Torah learning.</Text>
 
             {/* Credit Card via PayPal */}
-            <SectionCard title="Credit/Debit Card (via PayPal)">
-                <Text className="text-[#0F172A] text-[15px] leading-5 mb-3">Use our secure PayPal page to donate with any major credit or debit card. You do not need a PayPal account.</Text>
+            <SectionCard title="Credit/Debit Card (via PayPal)" subsection="Secure Payment Processing">
+                <Text className="text-[#0F172A] text-[15px] leading-5 mb-3 mt-2">Use our secure PayPal page to donate with any major credit or debit card. You do not need a PayPal account.</Text>
                 <ActionButton label="Open PayPal Donate" onPress={() => openLink(paypalWeb)} />
                 <View className="flex-row gap-2 mt-1">
                     <ActionButton label="Share Link" onPress={() => shareText(`Donate here: ${paypalWeb}`)} />
@@ -103,7 +117,7 @@ const DonationScreen: React.FC = () => {
             </SectionCard>
 
             {/* Venmo */}
-            <SectionCard title="Venmo">
+            <SectionCard title="Venmo" subsection={"Quick mobile payment"}>
                 <Text className="text-[#0F172A] text-[15px] leading-5 mb-3">Send a donation quickly through Venmo. Please include a note like Donation or your intended fund.</Text>
                 <InlineCopyRow label="Venmo" value={`@${CONFIG.VENMO_HANDLE}`} />
                 <View className="gap-2 mt-1">
@@ -115,7 +129,7 @@ const DonationScreen: React.FC = () => {
             </SectionCard>
 
             {/* Zelle */}
-            <SectionCard title="Zelle">
+            <SectionCard title="Zelle" subsection={"Direct bank transfer"}>
                 <Text className="text-[#0F172A] text-[15px] leading-5 mb-3">Zelle transfers go directly to our account (no platform fees). In your banking app, choose Zelle and send to the details below.</Text>
                 <InlineCopyRow label="Account Name" value={CONFIG.ZELLE_NAME} />
                 <InlineCopyRow label="Email" value={CONFIG.ZELLE_EMAIL} />
