@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {FlatList, Platform, ScrollView, Text, View} from 'react-native';
 import {db} from "./Firebase";
-import {collection, onSnapshot} from "firebase/firestore"
+import {collection, onSnapshot, addDoc} from "firebase/firestore"
 import { LinearGradient } from "expo-linear-gradient";
 
 
@@ -16,7 +16,9 @@ const weekdayTimes = [
 
 function MinyanTimes() {
     const [minyanTimes, setMinyanTimes] = useState([]);
+    const [shabbatTimes, setshabbatTimes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [_loading, _setLoading] = useState(true);
 
 
 
@@ -38,19 +40,29 @@ function MinyanTimes() {
             );
             return unsub;
         }, []);
-    // useEffect(() => {
-    //     setLoading(true);
-    //     const UserQuery = collection(db, "PrayerName");
-    //
-    //     onSnapshot(UserQuery, (snapshot)=> {
-    //         let userList = [];
-    //         snapshot.docs.map((doc) => {
-    //              userList.push({...doc.data(), id: doc.id}, [])})
-    //             setMinyanTimes(userList);
-    //             setLoading(false);
-    //
-    //     })
-    // }, [])
+    useEffect(() => {
+        _setLoading(true);
+        const q = collection(db, "ShabbatTimes");
+        const unsub = onSnapshot(
+            q,
+            (snap) => {
+                const _list = snap.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                // @ts-ignore
+                setshabbatTimes(_list);
+                _setLoading(false);
+
+                console.log("[Shabbat snapshot]", _list);
+            },
+            (err) => {
+                console.error("[Shabbat snapshot ERROR]", err);
+                _setLoading(false);
+            }
+        );
+        return unsub;
+    }, []);
 
     // Add a new document in collection "cities"
    // const addData1 = asnyc () => {await setDoc(doc(db, "cities", "LA"), {
@@ -60,17 +72,9 @@ function MinyanTimes() {
    // })}
 
 // Add a new document with a generated id.
-    // const addData = async () => await addDoc(collection(db, "PrayerName"), {
-    //     PrayerName: "Afternoon Prayers",
-    //     Time: "10:00 AM"
-    // })
-    //     .then(() => {
-    //         console.log("Document successfully written!");
-    //     })
-    //     .catch((error) => {
-    //         console.error("Error writing document: ", error);
-    //     });
+
     console.log(minyanTimes);
+    console.log(shabbatTimes);
     const cardShadow =
         Platform.OS === "ios"
             ? {
@@ -82,13 +86,12 @@ function MinyanTimes() {
             : { elevation: 3 };
 
     /** @param {import('react-native').ListRenderItemInfo<any>} param0 */
-
     const renderItem = ({ item }) => (
         <View className="mx-4 rounded-full overflow-hidden" style={cardShadow}>
             <LinearGradient
                 colors={["#E8D4C0", "#F0E5D8"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
             >
                 {/* The flex-row MUST be inside the gradient */}
                 <View className="flex-row items-center justify-between p-4">
@@ -103,6 +106,7 @@ function MinyanTimes() {
 
 
     if (loading) return <Text>Loading…</Text>;
+    if (_loading) return <Text>Loading…</Text>;
 
     return (
 
@@ -113,7 +117,7 @@ function MinyanTimes() {
         >
             <FlatList
                 ListHeaderComponent={
-                    <Text className="text-center text-xl font-semibold text-neutral-800 mb-4">Weekday Minyan Times</Text>
+                    <Text className="text-center font-semibold text-neutral-800 mt-5 mb-4">Weekday Minyan Times</Text>
                 }
                 data={minyanTimes}
                 keyExtractor={(item) => String(item.id)}
@@ -121,13 +125,13 @@ function MinyanTimes() {
                 ItemSeparatorComponent={() => <View className="h-3" />} // spacing between pills
                 scrollEnabled={false}                // inside ScrollView
                 removeClippedSubviews
-                contentContainerClassName="mb-8"
+                contentContainerClassName="mb-5"
             />
             <FlatList
                 ListHeaderComponent={
                     <Text className="text-center font-semibold text-neutral-800 mb-4">Shabbat Minyan Times</Text>
                 }
-                data={minyanTimes}
+                data={shabbatTimes}
                 keyExtractor={(item) => String(item.id)}
                 renderItem={renderItem}
                 ItemSeparatorComponent={() => <View className="h-3" />} // spacing between pills
@@ -140,11 +144,6 @@ function MinyanTimes() {
     );
 }
 export default MinyanTimes;
-
-
-
-
-
 
     {/*// <ScrollView className="p-4 bg-gray-100">*/}
     {/*//     <Text className="text-2xl font-bold mt-3 text-center">Weekday Minyan Times</Text>*/}
