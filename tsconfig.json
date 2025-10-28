@@ -2,15 +2,15 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+    "allowJs": true,
+    "checkJs": true,              // optional: enables type-checking in .js
+    "paths": { "@/*": ["./*"] }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.js",                    // ← add
+    "**/*.jsx",                   // ← add if you have jsx
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
