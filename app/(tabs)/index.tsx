@@ -1,51 +1,8 @@
-// import {ScrollView, Text, View, Image} from "react-native";
-// import React from "react";
-//
-// export default function IndexContent() {
-//     return (
-//      <View className={"flex-1 bg-primary"}>
-//       <ScrollView>
-//       <Text className={"text-3xl font-bold mt-20 mb-3 text-center w-full color-dark-200"}>
-//           Welcome to Ohel Rachel!</Text>
-//           <Image
-//               source={images.newlogo}
-//               style={{
-//                   width: 132, // equivalent to w-48
-//                   height: 102, // equivalent to h-40
-//                   marginTop: 15, // equivalent to mt-20
-//                   marginBottom: 20, // equivalent to mb-5
-//                   marginLeft: 'auto',
-//                   marginRight: 'auto',
-//               }}
-//               resizeMode="contain"
-//               fadeDuration={0}
-//               progressiveRenderingEnabled={true}
-//           />
-//           <View className={"items-center justify-between mb-4 p-4 rounded-xl bg-fourth"}>
-//               {/*<Text className="text-2xl font-bold text-center">*/}
-//               {/*    About Us*/}
-//               {/*</Text>*/}
-//           <Text className="text-lg text-center">
-//               Welcome! We are delighted to have you here! Explore our events, lectures, and ways to
-//               contribute to our thriving community.
-//           </Text>
-//           </View>
-//           <View className={"flex-row items-center justify-between mb-4 p-4 rounded-xl bg-fourth"}>
-//           <Text className="text-lg text-left">
-//               Upcoming Events: {"\n"}
-//               Join us for Kiddush after Shacharit 9:00 am Minyan! {"\n"}
-//               Stay tuned for the new building updates!
-//           </Text>
-//           </View>
-//
-//       </ScrollView>
-//     </View>
-//   );
-// }
-import React, {PropsWithChildren} from "react";
-import { SafeAreaView, ScrollView, View, Image, StatusBar } from "react-native";
-import { Text, Pressable } from "react-native";
+import React, {PropsWithChildren, useEffect, useState} from "react";
+import {SafeAreaView, ScrollView, View, Image, StatusBar, FlatList, Text, Pressable} from "react-native";
 import {images} from "@/constants/images";
+import {db} from "@/lib/Firebase";
+import {collection, onSnapshot} from "firebase/firestore";
 
 const Colors = {
     gold: "#D4AF37",     // <- your gold
@@ -59,82 +16,6 @@ const Colors = {
 type PrimaryButtonProps = {
     label: string;
     onPress: () => void;
-}
-
-export default function HomeScreen() {
-    return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bg }}>
-            <StatusBar barStyle="dark-content" />
-            <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 32 }}>
-                {/* Hero */}
-                <View style={{ alignItems: "center", marginBottom: 20 }}>
-                    <Image
-                        source={images.newlogo}
-                        style={{ width: 150, height: 150, marginBottom: 8, resizeMode: "contain" }}
-                    />
-                    <Text style={{ fontSize: 28, fontWeight: "700", color: Colors.text }}>
-                        Ohel Rachel
-                    </Text>
-                    <Text style={{ fontSize: 16, color: Colors.muted, marginTop: 6, textAlign: "center" }}>
-                        Welcome — explore events, minyan times, and ways to contribute.
-                    </Text>
-                </View>
-
-                {/* Info card */}
-                <Card>
-                    <CardTitle>Welcome</CardTitle>
-                    <Text style={{ fontSize: 16, lineHeight: 22, color: Colors.text }}>
-                        We’re delighted to have you here. Discover our events and learning,
-                        and see how to support the community.
-                    </Text>
-                </Card>
-
-                {/* Upcoming card */}
-                <Card>
-                    <CardTitle>Upcoming</CardTitle>
-                    <View style={{ gap: 6 }}>
-                        <Text style={{ fontSize: 16, color: Colors.text }}>Kiddush after Shacharit — 9:00 AM</Text>
-                        <Text style={{ fontSize: 16, color: Colors.text }}>New building updates coming soon</Text>
-                    </View>
-                    <PrimaryButton
-                        label="View all events"
-                        onPress={() => {}}
-                    />
-                </Card>
-            </ScrollView>
-        </SafeAreaView>
-    );
-}
-
-/** Reusable bits */
-function Card({ children }: PropsWithChildren) {
-    return (
-        <View
-            style={{
-                backgroundColor: Colors.surface,
-                borderRadius: 16,
-                padding: 16,
-                borderWidth: 1,
-                borderColor: Colors.border,
-                marginBottom: 16,
-                shadowColor: "#000",
-                shadowOpacity: 0.06,
-                shadowRadius: 12,
-                shadowOffset: { width: 0, height: 4 },
-                elevation: 2,
-            }}
-        >
-            {children}
-        </View>
-    );
-}
-
-function CardTitle({ children }: PropsWithChildren) {
-    return (
-        <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 8 }}>
-            {children}
-        </Text>
-    );
 }
 
 function PrimaryButton({ label, onPress }: PrimaryButtonProps) {
@@ -158,3 +39,125 @@ function PrimaryButton({ label, onPress }: PrimaryButtonProps) {
         </Pressable>
     );
 }
+
+/** Reusable bits */
+
+function CardTitle({ children }: PropsWithChildren) {
+    return (
+        <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 8 }}>
+            {children}
+        </Text>
+    );
+}
+
+function Card({ children }: PropsWithChildren) {
+    return (
+        <View
+            style={{
+                backgroundColor: Colors.surface,
+                borderRadius: 16,
+                padding: 16,
+                borderWidth: 1,
+                borderColor: Colors.border,
+                marginBottom: 16,
+                shadowColor: "#000",
+                shadowOpacity: 0.06,
+                shadowRadius: 12,
+                shadowOffset: { width: 0, height: 4 },
+                elevation: 2,
+            }}
+        >
+            {children}
+        </View>
+    );
+}
+
+const renderItem = ({item}: any) => {
+    return(
+        <View style={{ gap: 6 }}>
+            <Text className = {"mb-2"} style={{ fontSize: 16, color: Colors.text, gap:3 }}>{item.info}</Text>
+        </View>
+
+    );
+}
+
+ function HomeScreen() {
+    const [events, setEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(true);
+        const q = collection(db, "Events");
+        const list = onSnapshot(q, (onSnapshot) => {
+                const items = onSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setEvents(items);
+                setLoading(false);
+            },
+            () => setLoading(false)
+        );
+        return list;
+    }, []);
+
+
+    // @ts-ignore
+    return (
+
+        <SafeAreaView style={{flex: 1, backgroundColor: Colors.bg}}>
+            <StatusBar barStyle="dark-content"/>
+            <ScrollView contentContainerStyle={{padding: 20, paddingBottom: 32}}>
+                {/* Hero */}
+                <View style={{alignItems: "center", marginBottom: 20}}>
+                    <Image
+                        source={images.newlogo}
+                        style={{width: 150, height: 150, marginBottom: 8, resizeMode: "contain"}}
+                    />
+                    <Text style={{fontSize: 28, fontWeight: "700", color: Colors.text}}>
+                        Ohel Rachel
+                    </Text>
+                    <Text style={{fontSize: 16, color: Colors.muted, marginTop: 6, textAlign: "center"}}>
+                        Welcome — explore events, minyan times, and ways to contribute.
+                    </Text>
+                </View>
+
+                {/* Info card */}
+                <Card>
+                    <CardTitle>Welcome</CardTitle>
+                    <Text style={{fontSize: 16, lineHeight: 22, color: Colors.text}}>
+                        We’re delighted to have you here. Discover our events and learning,
+                        and see how to support the community.
+                    </Text>
+                </Card>
+
+                <Card>
+                <FlatList
+                    ListHeaderComponent = {
+                        <CardTitle>Upcoming Events/Classes</CardTitle>
+                    }
+                    data = {events}
+                    keyExtractor = {(item: { id: any; }) => item.id.toString()}
+                    renderItem = {renderItem}
+                />
+                </Card>
+                {/* Upcoming card */}
+                <Card>
+                    <CardTitle>Upcoming</CardTitle>
+                    <View style={{gap: 6}}>
+                        <Text style={{fontSize: 16, color: Colors.text}}>Kiddush after Shacharit — 9:00 AM</Text>
+                        <Text style={{fontSize: 16, color: Colors.text}}>New building updates coming soon</Text>
+                    </View>
+                    <PrimaryButton
+                        label="View all events"
+                        onPress={() => {
+                        }}
+                    />
+                </Card>
+            </ScrollView>
+        </SafeAreaView>
+    );
+}
+
+
+export default HomeScreen;
