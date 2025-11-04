@@ -101,6 +101,7 @@ const renderItem = ({item}: any) => {
         return list;
     }, []);
 
+     if (loading) return <Text>Loading…</Text>;
 
     // @ts-ignore
     return (
