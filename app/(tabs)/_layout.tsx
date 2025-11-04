@@ -91,24 +91,26 @@ export default function TabLayout() {
             />
             <Tabs.Screen
                 name="Events"
-                options={{
-                    title: "Events",
-                    headerShown: false,
-                    tabBarIcon:({focused})=>(
-                        <TabIcon focused = {focused} icon = {icons.event}  text = "Events" />
-                    )
-                }
-                }
+                options={{ href: null }} // Causes the "Events" to be hidden
+                // options={{
+                //     title: "Events",
+                //     headerShown: false,
+                //     tabBarIcon:({focused})=>(
+                //         <TabIcon focused = {focused} icon = {icons.event}  text = "Events" />
+                //     )
+                // }
+                // }
             />
             <Tabs.Screen
                 name = "videos"
-                options = {{
-                    title: "Lectures",
-                    headerShown: false,
-                    tabBarIcon: ({focused})=> (
-                        <TabIcon focused = {focused} icon = {icons.openbook}  text = "Lectures" />
-                    )
-                }}
+                options={{ href: null }} // Causes the "Videos" to be hidden
+                // options = {{
+                //     title: "Lectures",
+                //     headerShown: false,
+                //     tabBarIcon: ({focused})=> (
+                //         <TabIcon focused = {focused} icon = {icons.openbook}  text = "Lectures" />
+                //     )
+                // }}
             />
             <Tabs.Screen
                 name = "donation"
