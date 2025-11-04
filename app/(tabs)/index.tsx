@@ -1,6 +1,7 @@
 import React, {PropsWithChildren, useEffect, useState} from "react";
-import {SafeAreaView, ScrollView, View, Image, StatusBar, FlatList, Text, Pressable} from "react-native";
+import { ScrollView, View, Image, StatusBar, FlatList, Text, Pressable} from "react-native";
 import {images} from "@/constants/images";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {db} from "@/lib/Firebase";
 import {collection, onSnapshot} from "firebase/firestore";
 
