@@ -76,7 +76,7 @@ function Card({ children }: PropsWithChildren) {
 const renderItem = ({item}: any) => {
     return(
         <View style={{ gap: 6 }}>
-            <Text className = {"mb-2"} style={{ fontSize: 16, color: Colors.text, gap:3 }}>{item.info}</Text>
+            <Text className = {"mb-2 text-[#0F172A]"} style={{ fontSize: 16, color: Colors.text, gap:3 }}>{item.info}</Text>
         </View>
 
     );
@@ -134,14 +134,20 @@ const renderItem = ({item}: any) => {
                 </Card>
 
                 <Card>
-                <FlatList
-                    ListHeaderComponent = {
-                        <CardTitle>Upcoming Events/Classes</CardTitle>
+                    <CardTitle>Upcoming Events/Classes</CardTitle>
+                {/*<FlatList*/}
+                {/*    ListHeaderComponent = {*/}
+                {/*        <CardTitle>Upcoming Events/Classes</CardTitle>*/}
+                {/*    }*/}
+                {/*    data = {events}*/}
+                {/*    keyExtractor = {(item: { id: any; }) => item.id.toString()}*/}
+                {/*    renderItem = {renderItem}*/}
+                {/*/>*/}
+                    {
+                        events.map((item) => <View key={item.id} style={{gap: 6}}>
+                        <Text className = {"mb-2 text-[#0F172A]"} style={{ fontSize: 16, color: Colors.text, gap:3 }}>{item.info}</Text>
+                        </View>)
                     }
-                    data = {events}
-                    keyExtractor = {(item: { id: any; }) => item.id.toString()}
-                    renderItem = {renderItem}
-                />
                 </Card>
                 {/* Upcoming card */}
                 <Card>
