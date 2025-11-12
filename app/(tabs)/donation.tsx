@@ -2,18 +2,6 @@ import React from "react";
 import { Alert, Linking, Platform, Pressable, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 
-
-/**
- * —— Quick setup ——
- * 1) Fill in the config below with your real info.
- * 2) Optionally add QR images to your project and show them in the UI.
- * 3) Wire this screen into your navigator (e.g., React Navigation) as "Donate".
- *
- * —— NativeWind ——
- * This screen is styled using NativeWind (Tailwind for RN). Make sure you have:
- * - `nativewind` installed and configured (babel plugin + tailwind config for RN)
- * - `className` props enabled (NativeWind handles it automatically)
- */
 const CONFIG = {
     PAYPAL_DONATION_URL: "https://www.paypal.com/donate?hosted_button_id=YOUR_BUTTON_ID",
     VENMO_HANDLE: "YourVenmoHandle", // without @
@@ -22,7 +10,7 @@ const CONFIG = {
     ZELLE_EMAIL: "donations@yourexample.org",
     ZELLE_PHONE: "+1 (555) 123-4567",
 };
-
+// What does Linking do and canOpenUrl Do
 const openLink = async (url: string) => {
     const supported = await Linking.canOpenURL(url);
     if (supported) return Linking.openURL(url);
@@ -77,7 +65,7 @@ const SectionCard: React.FC<{ title: string; children: React.ReactNode; subsecti
 const ActionButton: React.FC<{ label: string; onPress: () => void }>= ({ label, onPress }) => (
     <Pressable
         onPress={onPress}
-        className="bg-[#FFB302] rounded-xl items-center justify-center py-3 px-4 mb-2 active:opacity-90"
+        className="bg-[#B59410] rounded-xl items-center justify-center py-3 px-4 mb-2 active:opacity-90"
         android_ripple={{ color: "#283a99" }}
     >
         <Text className="text-white font-bold text-sm">{label}</Text>
@@ -140,14 +128,15 @@ const DonationScreen: React.FC = () => {
             </SectionCard>
 
             {/* Tax / receipt info */}
-            <View className="mt-2 bg-[#0e1630] border border-[#1f2b55] rounded-xl p-3.5">
-                <Text className="text-[#e6ecff] text-sm font-bold mb-1.5">Tax & Receipt Information</Text>
-                <Text className="text-[#cfd8ff] text-xs leading-5">
+            {/*<View className="mt-2 bg-[#ffffff] border border-[#1f2b55] rounded-xl p-3.5">*/}
+            <View className="mt-2 bg-[#ffffff] rounded-xl p-3.5">
+                <Text className="text-[#0F172A] text-sm font-bold mb-1.5">Tax & Receipt Information</Text>
+                <Text className="text-[#0F172A] text-xs leading-5">
                     Ohel Rachel Synagogue is a 501(c)(3) nonprofit. Donations may be tax-deductible in the United States. If you need a receipt, please email {CONFIG.ZELLE_EMAIL} with your name, amount, date, and payment method.
                 </Text>
             </View>
 
-            <Text className="text-[#8fa2ff] text-center mt-4">Thank you for your generosity!</Text>
+            <Text className="text-[#0F172A] text-center mt-4">Thank you for your generosity!</Text>
         </ScrollView>
     );
 };
