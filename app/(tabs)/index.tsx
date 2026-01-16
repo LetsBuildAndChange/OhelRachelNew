@@ -127,7 +127,7 @@ const renderItem = ({item}: any) => {
                 {/* Info card */}
                 <Card>
                     <CardTitle>Welcome</CardTitle>
-                    <Text style={{fontSize: 16, lineHeight: 22, color: Colors.text}}>
+                    <Text style={{fontSize: 16, lineHeight: 18, color: Colors.text, gap:3}}>
                         We’re delighted to have you here. Discover our events and learning,
                         and see how to support the community.
                     </Text>
@@ -150,18 +150,6 @@ const renderItem = ({item}: any) => {
                     }
                 </Card>
                 {/* Upcoming card */}
-                <Card>
-                    <CardTitle>Upcoming</CardTitle>
-                    <View style={{gap: 6}}>
-                        <Text style={{fontSize: 16, color: Colors.text}}>Kiddush after Shacharit — 9:00 AM</Text>
-                        <Text style={{fontSize: 16, color: Colors.text}}>New building updates coming soon</Text>
-                    </View>
-                    <PrimaryButton
-                        label="View all events"
-                        onPress={() => {
-                        }}
-                    />
-                </Card>
             </ScrollView>
         </SafeAreaView>
     );
