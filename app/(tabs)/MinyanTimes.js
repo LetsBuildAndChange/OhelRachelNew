@@ -10,6 +10,7 @@ import {
     onSnapshot,
     orderBy,
     query,
+    where,
 } from "firebase/firestore";
 
 export default function MinyanTimes() {
@@ -26,7 +27,10 @@ export default function MinyanTimes() {
                 const id = snap.data()?.currentScheduleId || "default";
                 setScheduleId(id);
             },
-            (err) => console.error("[settings listener]", err)
+            (error) => {
+                console.error("[settings listener]", error);
+                // Consider handling the error in UI
+            }
         );
         return unsub;
     }, []);
@@ -43,7 +47,7 @@ export default function MinyanTimes() {
             scheduleId,
             "sections"
         );
-        const qSections = query(sectionsRef, orderBy("index", "asc"));
+        const qSections = query(sectionsRef, orderBy("index", "asc"), where("isVisible", "==", true));
 
         let cleanupItems = () => {};
 
@@ -80,7 +84,7 @@ export default function MinyanTimes() {
                         section.id,
                         "items"
                     );
-                    const qItems = query(itemsRef, orderBy("index", "asc"));
+                    const qItems = query(itemsRef, orderBy("index", "asc"), where("isVisible", "==", true));
                     const u = onSnapshot(
                         qItems,
                         (itemSnap) => {
@@ -89,7 +93,7 @@ export default function MinyanTimes() {
                                 ...(it.data() || {}),
                             }));
 
-                            // merge items into the correct section by id
+                            // merged items into the correct section by id
                             // @ts-ignore
                             setSections((prev) => {
                                 const copy = prev.map((s) =>
@@ -161,9 +165,9 @@ export default function MinyanTimes() {
             keyExtractor={(i) => i.id}
             renderItem={renderItem}
             renderSectionHeader={({ section }) => (
-                <Text className="text-center font-semibold text-neutral-800 mt-5 mb-4">
+                <Text className="text-center text-xl font-semibold text-neutral-800 mt-5 mb-4">
                     {section.
-// @ts-ignore
+                        // @ts-ignore
                     title}
                 </Text>
             )}
