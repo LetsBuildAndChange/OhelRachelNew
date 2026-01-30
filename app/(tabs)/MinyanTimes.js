@@ -146,12 +146,17 @@ export default function MinyanTimes() {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             >
-                <View className="flex-row items-center justify-between p-4">
-                    <Text className="text-base font-semibold text-neutral-800">
+            <View className="flex-row items-center justify-between p-4"
+             accessible={true}
+             accessibilityLabel={`Prayer name: ${item.PrayerName} at time: ${item.Time}`}
+             accessibilityRole="text" 
+             >
+                <Text className="text-base font-semibold text-neutral-800" allowFontScaling>
                         {item.PrayerName}
                     </Text>
-                    <Text className="text-base text-neutral-800">{item.Time}</Text>
-                </View>
+                <Text className="text-base text-neutral-800" allowFontScaling>{item.Time}</Text>
+            </View>
+                
             </LinearGradient>
         </View>
     );

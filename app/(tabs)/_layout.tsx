@@ -1,8 +1,7 @@
-import {Text, View, Image, ImageBackground} from "react-native";
-import {Tabs} from "expo-router";
-import {icons} from "@/constants/icons"; // Import the icons
-import {images} from "@/constants/images";
+import { icons } from "@/constants/icons"; // Import the icons
+import { Tabs } from "expo-router";
 import React from "react";
+import { Image, Text, View } from "react-native";
 
 interface TabIconProps {
     focused: boolean;
@@ -27,7 +26,12 @@ const TabIcon = ({focused, icon, text}: TabIconProps) => {
     // }
     return (
         // <View className={"flex-1 size-full justify-center items-center mt-4 rounded-full"}>
-        <View className="w-16 items-center justify-center py-1">
+        <View 
+            className="w-16 items-center justify-center py-1"
+            accessible={true}
+            accessibilityRole="tab"
+            accessibilityLabel={text}
+        >
         <Image
                 source={icon}
                 tintColor={focused ? "#151312" : "#A8B5DB"}
@@ -70,8 +74,9 @@ export default function TabLayout() {
                     title: "Home",
                     headerShown: false,
                     tabBarIcon: ({focused})=> (
-                        <TabIcon focused = {focused} icon = {icons.home}  text = "Home" />
-                    )
+                        <TabIcon focused = {focused} icon = {icons.homeicon}  text = "Home" />
+                    ),
+                    tabBarAccessibilityLabel: "Home tab"
 
 
                 }}
@@ -84,8 +89,9 @@ export default function TabLayout() {
                     title: "Minyan Times",
                     headerShown: false,
                     tabBarIcon: ({focused})=> (
-                        <TabIcon focused = {focused} icon = {icons.torahbook}  text = "Times" />
-                    )
+                        <TabIcon focused = {focused} icon = {icons.torahbook}  text = "Minyan" />
+                    ),
+                    tabBarAccessibilityLabel: "Minyan Times tab"
 
                 }}
             />
@@ -119,7 +125,8 @@ export default function TabLayout() {
                     headerShown: false,
                     tabBarIcon: ({focused})=> (
                         <TabIcon focused = {focused} icon = {icons.charity}  text = "Donate" />
-                    )
+                    ),
+                    tabBarAccessibilityLabel: "Donate tab"
 
                 }}
             />
