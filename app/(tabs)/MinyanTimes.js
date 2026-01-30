@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Platform, SectionList, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { db } from "./Firebase";
+import { db } from "@/lib/Firebase";
 // Firebase v9 modular SDK
 import {
     collection,
