@@ -1,6 +1,6 @@
 // MinyanTimes.js
 import React, { useEffect, useState } from "react";
-import { Platform, SectionList, Text, View } from "react-native";
+import { ActivityIndicator, Platform, SectionList, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { db } from "@/lib/Firebase";
 // Firebase v9 modular SDK
@@ -161,7 +161,14 @@ export default function MinyanTimes() {
         </View>
     );
 
-    if (loading) return <Text>Loading…</Text>;
+    if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-neutral-50">
+        <ActivityIndicator size="large" color="#B59410" />
+        <Text className="mt-2 text-gray-600">Loading Minyan Times...</Text>
+      </View>
+    );
+  }
 
     return (
         <SectionList
