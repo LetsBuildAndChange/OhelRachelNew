@@ -1,12 +1,12 @@
 import React, {PropsWithChildren, useEffect, useState} from "react";
-import { ScrollView, View, Image, StatusBar, FlatList, Text, Pressable} from "react-native";
+import { ScrollView, View, Image, StatusBar, Text, Pressable, ActivityIndicator} from "react-native";
 import {images} from "@/constants/images";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {db} from "@/lib/Firebase";
 import {collection, onSnapshot} from "firebase/firestore";
 
 const Colors = {
-    gold: "#D4AF37",     // <- your gold
+    gold: "#D4AF37",     //  gold
     bg: "#F8FAFC",       // soft light background
     surface: "#FFFFFF",
     text: "#0F172A",
@@ -85,6 +85,7 @@ const renderItem = ({item}: any) => {
  function HomeScreen() {
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -102,14 +103,21 @@ const renderItem = ({item}: any) => {
         return list;
     }, []);
 
-     if (loading) return <Text>Loading…</Text>;
+     if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-neutral-50">
+        <ActivityIndicator size="large" color="#B59410" />
+        <Text className="mt-2 text-gray-600">Loading Home Page...</Text>
+      </View>
+    );
+  }
 
     // @ts-ignore
     return (
 
-        <SafeAreaView style={{flex: 1, backgroundColor: Colors.bg}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: Colors.bg}} edges={["top", "left", "right"]}>
             <StatusBar barStyle="dark-content"/>
-            <ScrollView contentContainerStyle={{padding: 20, paddingBottom: 32}}>
+            <ScrollView contentContainerStyle={{padding: 20}}>
                 {/* Hero */}
                 <View style={{alignItems: "center", marginBottom: 20}}>
                     <Image
@@ -133,7 +141,7 @@ const renderItem = ({item}: any) => {
                     </Text>
                 </Card>
 
-                <Card>
+                <View style={styles.cardStyle}>
                     <CardTitle>Upcoming Events/Classes</CardTitle>
                 {/*<FlatList*/}
                 {/*    ListHeaderComponent = {*/}
@@ -143,17 +151,38 @@ const renderItem = ({item}: any) => {
                 {/*    keyExtractor = {(item: { id: any; }) => item.id.toString()}*/}
                 {/*    renderItem = {renderItem}*/}
                 {/*/>*/}
-                    {
-                        events.map((item) => <View key={item.id} style={{gap: 6}}>
-                        <Text className = {"mb-2 text-[#0F172A]"} style={{ fontSize: 16, color: Colors.text, gap:3 }}>{item.info}</Text>
-                        </View>)
-                    }
-                </Card>
+                
+                {/* Event Listings with Error Handling */}
+                {events.length > 0 ? (
+                    events.map((item) =>
+                        <View key={item.id} style={{gap: 6}}>
+                            <Text className = {"mb-2 text-[#0F172A]"} style={{ fontSize: 16, color: Colors.text, gap:3 }}>{item.info}</Text>
+                        </View>
+                    )
+                ) : (
+                    <Text style={{ fontSize: 16, color: Colors.text }}>No upcoming events.</Text>
+                )}
+            </View>
                 {/* Upcoming card */}
             </ScrollView>
         </SafeAreaView>
     );
 }
+const styles = {
+    cardStyle: { 
+        backgroundColor: Colors.surface,
+                borderRadius: 16,
+                padding: 16,
+                borderWidth: 1,
+                borderColor: Colors.border,
+                marginBottom: 16,
+                shadowColor: "#000",
+                shadowOpacity: 0.06,
+                shadowRadius: 12,
+                shadowOffset: { width: 0, height: 4 },
+                elevation: 2,
+    }
+};
 
 
 export default HomeScreen;
