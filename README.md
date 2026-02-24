@@ -6,7 +6,7 @@ A cross-platform React Native mobile app for the Ohel Rachel community, built wi
 
 Ohel Rachel is a community and religious app providing members with real-time access to prayer schedules, events, donation options, and more. The app features a tab-based navigation interface with real-time data synchronization through Firebase Firestore.
 
-# Why I Built This
+## Why I Built This
 
 The community previously relied on group chats and word-of-mouth to distribute information about events and prayer schedules. This led to inconsistent communication and missed updates.
 
