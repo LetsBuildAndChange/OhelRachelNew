@@ -1,50 +1,79 @@
-# Welcome to your Expo app 👋
+Ohel Rachel
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A cross-platform React Native mobile app built with Expo and TypeScript to centralize community communication, prayer schedules, and donations.
 
-## Get started
+(App Store link will be added upon public release.)
 
-1. Install dependencies
+Overview
 
-   ```bash
-   npm install
-   ```
+Ohel Rachel provides community members with real-time access to prayer schedules, events, announcements, and donation options. The app uses Firebase Firestore to synchronize data dynamically, ensuring users always see the latest updates without manual refresh.
 
-2. Start the app
+Why I Built This
 
-   ```bash
-   npx expo start
-   ```
+The community previously relied on group chats and word-of-mouth to distribute updates about events and prayer schedules. This led to inconsistent communication and missed information.
 
-In the output, you'll find options to open the app in a
+I built Ohel Rachel to create a centralized, real-time platform that delivers reliable updates to all members through a single mobile application.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Tech Stack
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Framework: Expo (React Native 0.81)
 
-## Get a fresh project
+Language: TypeScript
 
-When you're ready, run:
+Routing: Expo Router (file-based navigation)
 
-```bash
-npm run reset-project
-```
+Backend: Firebase Firestore (real-time database)
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Styling: NativeWind (Tailwind for React Native)
 
-## Learn more
+UI Components: React Native Paper + Expo Vector Icons
 
-To learn more about developing your project with Expo, look at the following resources:
+Build & Distribution: EAS Build (App Store deployment)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Features
 
-## Join the community
+Real-time prayer schedule updates
 
-Join our community of developers creating universal apps.
+Dynamic schedule section visibility controlled from backend
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Community event listings
+
+Donation integration
+
+Cross-platform support (iOS / Android)
+
+Engineering Decisions
+
+Real-Time Updates: Implemented Firestore onSnapshot listeners to enable reactive UI updates without requiring app reloads.
+
+Backend-Controlled Visibility: Designed schedule sections with visibility flags, allowing administrators to modify displayed content instantly.
+
+Type Safety: Used TypeScript to enforce Firestore data consistency and reduce runtime errors.
+
+Deployment Strategy: Chose Expo + EAS Build to simplify provisioning, certificate management, and production builds.
+
+Getting Started
+Installation
+git clone <repository-url>
+cd OhelRachelNew
+npm install
+Development
+npx expo start
+
+Press i for iOS
+
+Press a for Android
+
+Press w for Web
+
+Production Deployment
+
+The application is configured for production builds using EAS Build.
+
+iOS distribution configured
+
+Pending Apple Developer approval for public App Store release
+
+License
+
+[Add license information]
