@@ -73,8 +73,5 @@ iOS distribution configured
 
 Pending Apple Developer approval for public App Store release
 
-## License
-
-[Add your license information here]
 
 
