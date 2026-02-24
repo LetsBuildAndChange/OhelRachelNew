@@ -1,6 +1,13 @@
-import React from "react";
-import { Alert, Linking, Platform, Pressable, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
-import {LinearGradient} from "expo-linear-gradient";
+import { db } from "@/lib/Firebase";
+import { collection, onSnapshot, doc} from "firebase/firestore";
+import React, { use, useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Linking, Pressable, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
+type DonationInfo = {
+    zelleInfo: string;
+    paypalURL: string;
+    venmoInfo: string;
+    venmoURL: string;
+};
 
 const CONFIG = {
     PAYPAL_DONATION_URL: "https://www.paypal.com/donate?hosted_button_id=MHRPD75CUWEQN&Z3JncnB0=",
@@ -8,12 +15,17 @@ const CONFIG = {
     VENMO_NOTE: "Donation to Ohel Rachel", // default note
     ZELLE_EMAIL: "ohelrachel@yahoo.com",
 };
-// What does Linking do and canOpenUrl Do
+
 const openLink = async (url: string) => {
+    if (!url) {
+    Alert.alert("Missing link", "This link is not configured.");
+    return;
+  }
     const supported = await Linking.canOpenURL(url);
     if (supported) return Linking.openURL(url);
     Alert.alert("Unable to open link", "Please try again.");
 };
+
 
 const copyToClipboard = async (text: string, label?: string) => {
     try {
@@ -38,31 +50,19 @@ const shareText = async (message: string) => {
 };
 
 const SectionCard: React.FC<{ title: string; children: React.ReactNode; subsection: string }> = ({ title, children, subsection }) => (
-    <View className="bg-[#FFFFFF] border-[#1f2b55] rounded-2xl p-4 mb-4 shadow-black/20 shadow-lg">
+    // <View className="bg-[#FFFFFF] border-[#1f2b55] rounded-2xl p-4 mb-4 shadow-black/20 shadow-lg">
+    <View className="bg-[#FFFFFF] border-[#1f2b55] rounded-2xl p-4 mb-4">
         <Text className="text-[#0F172A] text-base font-bold">{title}</Text>
         <Text className="text-sm text-gray-500">{subsection}</Text>
         {children}
     </View>
 );
-// const ActionButton: React.FC<{ label: string; onPress: () => void }> = ({ label, onPress }) => (
-//     <Pressable
-//         onPress={onPress}
-//         className="rounded-full overflow-hidden mb-2 active:opacity-90"
-//     >
-//         <LinearGradient
-//             colors={["#D6AE7B", "#B88A4A"]}
-//             start={{ x: 0, y: 0 }}
-//             end={{ x: 1, y: 1 }}
-//             className="h-12 rounded-full items-center justify-center"
-//         >
-//             <Text className="text-white font-semibold text-base lm-5">{label}</Text>
-//         </LinearGradient>
-//     </Pressable>
-// );
 
 const ActionButton: React.FC<{ label: string; onPress: () => void }>= ({ label, onPress }) => (
     <Pressable
         onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={label}
         className="bg-[#B59410] rounded-xl items-center justify-center py-3 px-4 mb-2 active:opacity-90"
         android_ripple={{ color: "#283a99" }}
     >
@@ -73,67 +73,130 @@ const ActionButton: React.FC<{ label: string; onPress: () => void }>= ({ label, 
 const InlineCopyRow: React.FC<{ label: string; value: string }>= ({ label, value }) => (
     <View className="flex-row items-center justify-between bg-[#0e1630] border border-[#1f2b55] rounded-xl py-2.5 px-3 mb-2 gap-3">
         <Text className="text-[#9fb2ff] font-semibold text-sm">{label}</Text>
-        <TouchableOpacity onPress={() => copyToClipboard(value, label)} className="max-w-[70%]">
+        <TouchableOpacity
+            onPress={() => copyToClipboard(value, label)}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel={`Copy ${label}: ${value}`}
+            accessibilityHint="Double tap to copy to clipboard"
+        >
             <Text numberOfLines={1} className="text-[#9fb2ff] text-sm font-bold">{value}</Text>
         </TouchableOpacity>
     </View>
 );
+
+
 const DonationScreen: React.FC = () => {
-    const paypalWeb = CONFIG.PAYPAL_DONATION_URL;
-    const venmoDeep = Platform.select({
-        ios: `venmo://pay?recipients=${CONFIG.VENMO_HANDLE}&note=${encodeURIComponent(CONFIG.VENMO_NOTE)}`,
-        android: `venmo://paycharge?txn=pay&recipients=${CONFIG.VENMO_HANDLE}&note=${encodeURIComponent(CONFIG.VENMO_NOTE)}`,
-        default: undefined,
-    });
+    const [donations, setDonations] = useState<DonationInfo | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+   
     const venmoWeb = `https://venmo.com/u/${CONFIG.VENMO_HANDLE}`;
+
+    useEffect(() => {
+        setLoading(true);
+        const docref = doc(db, "DonationInfo", "info");
+        const unsubscribe = onSnapshot(docref, (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.data() as DonationInfo;
+                setDonations(data);
+            } else {
+                setError("Donation information not found.");
+            }
+            setLoading(false); 
+        },
+        (err) => {
+            console.error("Error fetching donation info:", err);
+            setError("Failed to load donation information. Please try again later.");
+            setLoading(false);
+        });
+        return unsubscribe;
+    }, []);
+
+    //  useEffect(() => {
+    //     if (error) {
+    //         Alert.alert("Error", error, [{ text: "OK", onPress: () => setError(null) }]);
+    //     }
+         // TO READ MANY documents from a collection 
+    //     const list = onSnapshot(docref, (onSnapshot) => {
+    //             const items = onSnapshot.docs.map((doc) => ({
+    //                 id: doc.id,
+    //                 ...doc.data()
+    //             }));
+    //             setDonations(items); // DONATIONS IS AN ARRAY OF DOCUMENTS
+    //             setLoading(false);
+    //         },
+    //         () => setLoading(false)
+    //     );
+    //     return list;
+    // }, []);
+
+     if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center bg-neutral-50">
+        <ActivityIndicator size="large" color="#B59410" />
+        <Text className="mt-2 text-gray-600">Loading Donation Info...</Text>
+      </View>
+    );
+  }
 
     return (
         <ScrollView className="bg-#F8FAFC px-5">
-            <Text className="text-[#0F172A] font-extrabold text-[28px] mt-9 mb-1">Support Our Community</Text>
+            <Text className="text-[#0F172A] font-extrabold text-[28px] mt-11 mb-1">Support Our Community</Text>
             <Text className="text-[#0F172A] text-base leading-6 mb-4">Thank you for helping us sustain programs, services, and Torah learning.</Text>
 
             {/* Zelle */}
-            <SectionCard title="Zelle (Prefered)" subsection={"Direct bank transfer"}>
+            <SectionCard title="Zelle (Preferred)" subsection={"Direct bank transfer"}>
                 <Text className="text-[#0F172A] text-[15px] leading-5 mb-3">Zelle transfers go directly to our account (No Platform Fees). In your banking app, choose Zelle and send to the details below.</Text>
-                {/*<InlineCopyRow label="Account Name" value={CONFIG.ZELLE_NAME} />*/}
-                <InlineCopyRow label="Email" value={CONFIG.ZELLE_EMAIL} />
-                {/*<InlineCopyRow label="Phone" value={CONFIG.ZELLE_PHONE} />*/}
+                <InlineCopyRow label="Email" value={donations?.zelleInfo ?? "loading..."} />
                 <Text className="text-[#0F172A] text-xs mt-1">Note: Please add a memo (e.g., General Fund, Aliyah, or In honor/memory of...).</Text>
-                {/* Optional: show your Zelle QR image */}
-                {/* <Image source={require('../assets/zelle-qr.png')} className="w-full h-44 mt-2 rounded-xl" resizeMode="contain" /> */}
             </SectionCard>
 
             {/* Venmo */}
             <SectionCard title="Venmo" subsection={"Quick mobile payment"}>
-                <Text className="text-[#0F172A] text-[15px] leading-5 mb-3">Send a donation quickly through Venmo. Please include a note like Donation or your intended fund.</Text>
-                <InlineCopyRow label="Venmo" value={`@${CONFIG.VENMO_HANDLE}`} />
+                <Text className="text-[#0F172A] text-[15px] leading-5 mb-3">Send a donation quickly through Venmo.</Text>
+                <InlineCopyRow 
+                label="Venmo"
+                value={`@${donations?.venmoInfo ?? "loading..."}`} 
+                />
                 <View className="gap-2 mt-1">
-                    {!!venmoDeep && <ActionButton label="Open in Venmo App" onPress={() => openLink(venmoDeep)} />}
-                    <ActionButton label="Open Venmo Profile (Web)" onPress={() => openLink(venmoWeb)} />
+                    <ActionButton label="Open Venmo Profile Page" onPress={() => donations?.venmoURL && openLink(donations.venmoURL)} />
                 </View>
-                {/* Optional: show your QR code image */}
-                {/* <Image source={require('../assets/venmo-qr.png')} className="w-full h-44 mt-2 rounded-xl" resizeMode="contain" /> */}
+                <View className="flex-row gap-2 mt-1">
+                    <ActionButton label="Share Link"
+                     onPress={() => 
+                     shareText(`Donate here: ${donations?.venmoURL}`)} 
+                     />
+                </View>
+            
             </SectionCard>
 
             {/* Credit Card via PayPal */}
             <SectionCard title="Credit/Debit Card" subsection="Secure Payment Processing">
                 <Text className="text-[#0F172A] text-[15px] leading-5 mb-3 mt-2">Use our secure PayPal page to donate with any major credit or debit card. {"\n"}Note: You do not need a PayPal account.</Text>
-                <ActionButton label="Open PayPal Donate" onPress={() => openLink(paypalWeb)} />
+                <ActionButton 
+                label="Open PayPal Donate Page" 
+                onPress={() => donations?.paypalURL && openLink(donations.paypalURL)}
+                />
                 <View className="flex-row gap-2 mt-1">
-                    <ActionButton label="Share Link" onPress={() => shareText(`Donate here: ${paypalWeb}`)} />
+                    <ActionButton label="Share Link"
+                     onPress={() => 
+                     shareText(`Donate here: ${donations?.paypalURL}`)} 
+                     />
                 </View>
+            
             </SectionCard>
 
             {/* Tax / receipt info */}
             {/*<View className="mt-2 bg-[#ffffff] border border-[#1f2b55] rounded-xl p-3.5">*/}
             <View className="mt-2 bg-[#ffffff] rounded-xl p-3.5">
-                <Text className="text-[#0F172A] text-sm font-bold mb-1.5">Tax & Receipt Information</Text>
+                <Text className="text-[#0F172A] text-sm font-bold mb-1.5">Receipt Information</Text>
                 <Text className="text-[#0F172A] text-xs leading-5">
                     Ohel Rachel Synagogue is a 501(c)(3) nonprofit. If you need a receipt, please email {CONFIG.ZELLE_EMAIL} with your name, amount, date, and payment method.
                 </Text>
             </View>
 
-            <Text className="text-[#0F172A] text-center mt-4 mb-1">Thank you for your generosity!</Text>
+            <Text className="text-[#0F172A] text-center mt-4 mb-2">Thank you for your generosity!</Text>
         </ScrollView>
     );
 };
