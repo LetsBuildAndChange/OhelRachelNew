@@ -38,7 +38,7 @@ I built Ohel Rachel to centralize announcements, schedules, and donation options
 - Type Safety: Used TypeScript to enforce Firestore data consistency and reduce runtime errors.
 - Deployment Strategy: Chose Expo + EAS Build to simplify provisioning, certificate management, and production builds.
 
-### Installation
+## Installation
 
 1. Clone the repository:
    ```bash
