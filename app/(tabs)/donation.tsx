@@ -1,13 +1,39 @@
 import { db } from "@/lib/Firebase";
-import { collection, onSnapshot, doc} from "firebase/firestore";
-import React, { use, useEffect, useState } from "react";
+import * as Clipboard from "expo-clipboard";
+import { doc, onSnapshot } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Linking, Pressable, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 type DonationInfo = {
     zelleInfo: string;
     paypalURL: string;
     venmoInfo: string;
     venmoURL: string;
 };
+
+const Colors = {
+    surface: "#FFFFFF",
+    border: "#E2E8F0",
+};
+
+const cardStyle = {
+    backgroundColor: Colors.surface,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+};
+
+const bodyTextStyle = { fontSize: 16, lineHeight: 20, color: "#0F172A" as const };
+const cardBodyStyle = { ...bodyTextStyle, marginTop: -3 };
+const cardTitleStyle = { fontSize: 18, fontWeight: "700" as const, color: "#0F172A" as const };
+const subsectionStyle = { fontSize: 14, lineHeight: 17, color: "#6B7280" as const, marginBottom: 2 };
 
 const CONFIG = {
     PAYPAL_DONATION_URL: "https://www.paypal.com/donate?hosted_button_id=MHRPD75CUWEQN&Z3JncnB0=",
@@ -28,15 +54,14 @@ const openLink = async (url: string) => {
 
 
 const copyToClipboard = async (text: string, label?: string) => {
+    if (!text || text === "loading...") {
+        Alert.alert("Not ready", "Please wait for donation details to load.");
+        return;
+    }
     try {
-        // Expo version:
-        // await Clipboard.setStringAsync(text);
-
-        // Bare RN version:
-        // Clipboard.setString(text);
-
+        await Clipboard.setStringAsync(text);
         Alert.alert("Copied", `${label ?? "Text"} copied to clipboard`);
-    } catch (e) {
+    } catch {
         Alert.alert("Copy failed", "Please copy manually.");
     }
 };
@@ -50,10 +75,9 @@ const shareText = async (message: string) => {
 };
 
 const SectionCard: React.FC<{ title: string; children: React.ReactNode; subsection: string }> = ({ title, children, subsection }) => (
-    // <View className="bg-[#FFFFFF] border-[#1f2b55] rounded-2xl p-4 mb-4 shadow-black/20 shadow-lg">
-    <View className="bg-[#FFFFFF] border-[#1f2b55] rounded-2xl p-4 mb-4">
-        <Text className="text-[#0F172A] text-base font-bold">{title}</Text>
-        <Text className="text-sm text-gray-500">{subsection}</Text>
+    <View style={cardStyle}>
+        <Text style={cardTitleStyle}>{title}</Text>
+        <Text style={subsectionStyle}>{subsection}</Text>
         {children}
     </View>
 );
@@ -67,6 +91,17 @@ const ActionButton: React.FC<{ label: string; onPress: () => void }>= ({ label, 
         android_ripple={{ color: "#283a99" }}
     >
         <Text className="text-white font-bold text-sm">{label}</Text>
+    </Pressable>
+);
+const SmallActionButton: React.FC<{ label: string; onPress: () => void }>= ({ label, onPress }) => (
+    <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        className="bg-[#B59410] rounded-lg items-center justify-center py-2 px-3 mb-2 active:opacity-90"
+        android_ripple={{ color: "#283a99" }}
+    >
+        <Text className="text-white font-bold text-xs">{label}</Text>
     </Pressable>
 );
 
@@ -133,28 +168,31 @@ const DonationScreen: React.FC = () => {
 
      if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-neutral-50">
-        <ActivityIndicator size="large" color="#B59410" />
-        <Text className="mt-2 text-gray-600">Loading Donation Info...</Text>
-      </View>
+      <SafeAreaView className="flex-1 bg-neutral-50" edges={["top", "left", "right"]}>
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#B59410" />
+          <Text className="mt-2 text-gray-600">Loading Donation Info...</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
     return (
-        <ScrollView className="bg-#F8FAFC px-5">
-            <Text className="text-[#0F172A] font-extrabold text-[28px] mt-11 mb-1">Support Our Community</Text>
+        <SafeAreaView className="flex-1 bg-[#F8FAFC]" edges={["top", "left", "right"]}>
+        <ScrollView className="px-5" contentContainerClassName="pb-8">
+            <Text className="text-[#0F172A] font-extrabold text-[28px] mt-4 mb-1">Support Our Community</Text>
             <Text className="text-[#0F172A] text-base leading-6 mb-4">Thank you for helping us sustain programs, services, and Torah learning.</Text>
 
             {/* Zelle */}
             <SectionCard title="Zelle (Preferred)" subsection={"Direct bank transfer"}>
-                <Text className="text-[#0F172A] text-[15px] leading-5 mb-3">Zelle transfers go directly to our account (No Platform Fees). In your banking app, choose Zelle and send to the details below.</Text>
+                <Text style={cardBodyStyle} className="mb-3">Zelle transfers go directly to our account (No Platform Fees). In your banking app, choose Zelle and send to the details below. Click on the email address to copy it.</Text>
                 <InlineCopyRow label="Email" value={donations?.zelleInfo ?? "loading..."} />
                 <Text className="text-[#0F172A] text-xs mt-1">Note: Please add a memo (e.g., General Fund, Aliyah, or In honor/memory of...).</Text>
             </SectionCard>
 
             {/* Venmo */}
             <SectionCard title="Venmo" subsection={"Quick mobile payment"}>
-                <Text className="text-[#0F172A] text-[15px] leading-5 mb-3">Send a donation quickly through Venmo.</Text>
+                <Text style={cardBodyStyle} className="mb-3">Send a donation quickly through Venmo. Click on the username to copy it.</Text>
                 <InlineCopyRow 
                 label="Venmo"
                 value={`@${donations?.venmoInfo ?? "loading..."}`} 
@@ -163,7 +201,7 @@ const DonationScreen: React.FC = () => {
                     <ActionButton label="Open Venmo Profile Page" onPress={() => donations?.venmoURL && openLink(donations.venmoURL)} />
                 </View>
                 <View className="flex-row gap-2 mt-1">
-                    <ActionButton label="Share Link"
+                    <SmallActionButton label="Share Link"
                      onPress={() => 
                      shareText(`Donate here: ${donations?.venmoURL}`)} 
                      />
@@ -173,13 +211,13 @@ const DonationScreen: React.FC = () => {
 
             {/* Credit Card via PayPal */}
             <SectionCard title="Credit/Debit Card" subsection="Secure Payment Processing">
-                <Text className="text-[#0F172A] text-[15px] leading-5 mb-3 mt-2">Use our secure PayPal page to donate with any major credit or debit card. {"\n"}Note: You do not need a PayPal account.</Text>
+                <Text style={cardBodyStyle} className="mb-3">Use our secure PayPal page to donate with any major credit or debit card. {"\n"}Note: You do not need a PayPal account.</Text>
                 <ActionButton 
                 label="Open PayPal Donate Page" 
                 onPress={() => donations?.paypalURL && openLink(donations.paypalURL)}
                 />
                 <View className="flex-row gap-2 mt-1">
-                    <ActionButton label="Share Link"
+                    <SmallActionButton label="Share Link"
                      onPress={() => 
                      shareText(`Donate here: ${donations?.paypalURL}`)} 
                      />
@@ -188,8 +226,7 @@ const DonationScreen: React.FC = () => {
             </SectionCard>
 
             {/* Tax / receipt info */}
-            {/*<View className="mt-2 bg-[#ffffff] border border-[#1f2b55] rounded-xl p-3.5">*/}
-            <View className="mt-2 bg-[#ffffff] rounded-xl p-3.5">
+            <View style={[cardStyle, { marginTop: 8 }]}>
                 <Text className="text-[#0F172A] text-sm font-bold mb-1.5">Receipt Information</Text>
                 <Text className="text-[#0F172A] text-xs leading-5">
                     Ohel Rachel Synagogue is a 501(c)(3) nonprofit. If you need a receipt, please email {CONFIG.ZELLE_EMAIL} with your name, amount, date, and payment method.
@@ -198,6 +235,7 @@ const DonationScreen: React.FC = () => {
 
             <Text className="text-[#0F172A] text-center mt-4 mb-2">Thank you for your generosity!</Text>
         </ScrollView>
+        </SafeAreaView>
     );
 };
 

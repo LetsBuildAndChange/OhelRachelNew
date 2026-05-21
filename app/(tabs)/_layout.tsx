@@ -10,20 +10,6 @@ interface TabIconProps {
 }
 
 const TabIcon = ({focused, icon, text}: TabIconProps) => {
-    // if(focused) {
-    //     return (
-    //         <>
-    //             <ImageBackground
-    //                              className="flex flex-row w-full flex-1 min-w-[100px] min-h-14 mt-4 justify-center
-    //                               items-center rounded-full overflow-hidden ">
-    //                 <Image source={icon}
-    //                        tintColor="#151312" className="size-5"/>
-    //                 <Text className="text-third text-base font-semibold ml-2">{text}</Text>
-    //             </ImageBackground>
-    //
-    //         </>
-    //     )
-    // }
     return (
         // <View className={"flex-1 size-full justify-center items-center mt-4 rounded-full"}>
         <View 
@@ -40,7 +26,7 @@ const TabIcon = ({focused, icon, text}: TabIconProps) => {
             />
             <Text
                 numberOfLines={1}                 // keep to one line instead of wrapping/clipping
-                allowFontScaling={false}
+                allowFontScaling={true}
                 className={focused
                     ? "mt-1 text-[11px] font-semibold text-[#151312]"
                     : "mt-1 text-[11px] text-[#6A6F7D]"
@@ -106,17 +92,6 @@ export default function TabLayout() {
                 //     )
                 // }
                 // }
-            />
-            <Tabs.Screen
-                name = "videos"
-                options={{ href: null }} // Causes the "Videos" to be hidden
-                // options = {{
-                //     title: "Lectures",
-                //     headerShown: false,
-                //     tabBarIcon: ({focused})=> (
-                //         <TabIcon focused = {focused} icon = {icons.openbook}  text = "Lectures" />
-                //     )
-                // }}
             />
             <Tabs.Screen
                 name = "donation"

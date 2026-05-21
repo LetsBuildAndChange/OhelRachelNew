@@ -36,4 +36,6 @@ export const icons = {
   charity,
   torah: require("@/assets/icons/torah.png"),
   torahbook: require("@/assets/icons/torahbook.png"),
+  homeicon: require("@/assets/icons/homeicon.png"),
+  icons8home32: require("@/assets/icons/icons8home32.png"),
 };

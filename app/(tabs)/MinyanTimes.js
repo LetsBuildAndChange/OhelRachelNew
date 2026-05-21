@@ -1,8 +1,9 @@
 // MinyanTimes.js
+import { db } from "@/lib/Firebase";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Platform, SectionList, Text, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { db } from "@/lib/Firebase";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 // Firebase v9 modular SDK
 import {
     collection,
@@ -13,7 +14,15 @@ import {
     where,
 } from "firebase/firestore";
 
+const TOP_INSET_TRIM = 10; // nudge content up slightly while staying clear of notch/island
+
 export default function MinyanTimes() {
+    const insets = useSafeAreaInsets();
+    const topInset =
+        insets.top > 44
+            ? Math.max(insets.top - TOP_INSET_TRIM, 44)
+            : insets.top;
+
     const [scheduleId, setScheduleId] = useState("default");
     const [sections, setSections] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -146,15 +155,25 @@ export default function MinyanTimes() {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
             >
-            <View className="flex-row items-center justify-between p-4"
-             accessible={true}
-             accessibilityLabel={`Prayer name: ${item.PrayerName} at time: ${item.Time}`}
-             accessibilityRole="text" 
-             >
-                <Text className="text-base font-semibold text-neutral-800" allowFontScaling>
-                        {item.PrayerName}
-                    </Text>
-                <Text className="text-base text-neutral-800" allowFontScaling>{item.Time}</Text>
+            <View
+                className="flex-row items-center gap-3 p-4"
+                accessible={true}
+                accessibilityLabel={`Prayer name: ${item.PrayerName} at time: ${item.Time}`}
+                accessibilityRole="text"
+            >
+                <Text
+                    className="flex-1 shrink text-base font-semibold text-neutral-800"
+                    allowFontScaling
+                    numberOfLines={3}
+                >
+                    {item.PrayerName}
+                </Text>
+                <Text
+                    className="shrink-0 text-base text-neutral-800"
+                    allowFontScaling
+                >
+                    {item.Time}
+                </Text>
             </View>
                 
             </LinearGradient>
@@ -163,29 +182,33 @@ export default function MinyanTimes() {
 
     if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-neutral-50">
-        <ActivityIndicator size="large" color="#B59410" />
-        <Text className="mt-2 text-gray-600">Loading Minyan Times...</Text>
+      <View className="flex-1 bg-neutral-50" style={{ paddingTop: topInset }}>
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#B59410" />
+          <Text className="mt-2 text-gray-600">Loading Minyan Times...</Text>
+        </View>
       </View>
     );
   }
 
     return (
+        <View className="flex-1 bg-neutral-50" style={{ paddingTop: topInset }}>
         <SectionList
             className="bg-neutral-50"
             sections={sections}
             keyExtractor={(i) => i.id}
             renderItem={renderItem}
             renderSectionHeader={({ section }) => (
-                <Text className="text-center text-xl font-semibold text-neutral-800 mt-5 mb-4">
+                <Text className="text-center text-xl font-semibold text-neutral-800 mt-2 mb-4">
                     {section.
                         // @ts-ignore
                     title}
                 </Text>
             )}
             ItemSeparatorComponent={() => <View className="h-3" />}
-            contentContainerClassName="py-8 pb-16"
+            contentContainerClassName="pt-2 pb-16"
             stickySectionHeadersEnabled={false}
         />
+        </View>
     );
 }

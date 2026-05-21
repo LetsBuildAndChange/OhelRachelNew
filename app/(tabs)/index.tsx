@@ -135,8 +135,8 @@ const renderItem = ({item}: any) => {
                 {/* Info card */}
                 <Card>
                     <CardTitle>Welcome</CardTitle>
-                    <Text style={{fontSize: 16, lineHeight: 18, color: Colors.text, gap:3}}>
-                        We’re delighted to have you here. Discover our events and learning,
+                    <Text style={{fontSize: 16, lineHeight: 20, color: Colors.text, gap:3}}>
+                        We’re delighted to have you here. Discover our events, minyanim, and learning,
                         and see how to support the community.
                     </Text>
                 </Card>
@@ -156,7 +156,7 @@ const renderItem = ({item}: any) => {
                 {events.length > 0 ? (
                     events.map((item) =>
                         <View key={item.id} style={{gap: 6}}>
-                            <Text className = {"mb-2 text-[#0F172A]"} style={{ fontSize: 16, color: Colors.text, gap:3 }}>{item.info}</Text>
+                            <Text className = {"mb-3 text-[#0F172A]"} style={{ fontSize: 16, color: Colors.text, gap: 3 }}>{item.info}</Text>
                         </View>
                     )
                 ) : (
