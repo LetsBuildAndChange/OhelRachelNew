@@ -1,0 +1,50 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /admins/{userId} {
+      allow read: if signedIn() && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /settings/app {
+      allow read: if true;
+      allow update: if isAdmin();
+      allow create, delete: if false;
+
+      match /schedules/{scheduleId} {
+        allow read: if true;
+        allow write: if isAdmin();
+
+        match /sections/{sectionId} {
+          allow read: if isAdmin() || resource.data.isVisible == true;
+          allow write: if isAdmin();
+
+          match /items/{itemId} {
+            allow read: if isAdmin() || resource.data.isVisible == true;
+            allow write: if isAdmin();
+          }
+        }
+      }
+    }
+
+    match /Events/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /DonationInfo/{donationId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

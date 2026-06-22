@@ -82,18 +82,6 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="Events"
-                options={{ href: null }} // Causes the "Events" to be hidden
-                // options={{
-                //     title: "Events",
-                //     headerShown: false,
-                //     tabBarIcon:({focused})=>(
-                //         <TabIcon focused = {focused} icon = {icons.event}  text = "Events" />
-                //     )
-                // }
-                // }
-            />
-            <Tabs.Screen
                 name = "donation"
                 options = {{
                     title: "Donate",

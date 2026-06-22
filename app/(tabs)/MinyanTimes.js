@@ -1,7 +1,7 @@
 // MinyanTimes.js
 import { db } from "@/lib/Firebase";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Platform, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 // Firebase v9 modular SDK
@@ -15,6 +15,151 @@ import {
 } from "firebase/firestore";
 
 const TOP_INSET_TRIM = 10; // nudge content up slightly while staying clear of notch/island
+const ROW_GAP = 12; // gap-3
+
+// @ts-ignore
+function MinyanTimeRow({ prayerName, time }) {
+    const [isStacked, setIsStacked] = useState(false);
+    const [rowWidth, setRowWidth] = useState(0);
+    const nameWidth = useRef(0);
+    const timeWidth = useRef(0);
+
+    const updateLayout = useCallback(() => {
+        if (rowWidth > 0 && nameWidth.current > 0 && timeWidth.current > 0) {
+            setIsStacked(nameWidth.current + timeWidth.current + ROW_GAP > rowWidth);
+        }
+    }, [rowWidth]);
+
+    useEffect(() => {
+        nameWidth.current = 0;
+        timeWidth.current = 0;
+        visibleNameWidth.current = 0;
+        visibleTimeWidth.current = 0;
+        setIsStacked(false);
+    }, [prayerName, time]);
+
+    useEffect(() => {
+        updateLayout();
+    }, [updateLayout]);
+
+    const onNameMeasure = useCallback(
+        // @ts-ignore
+        (e) => {
+            nameWidth.current = e.nativeEvent.lines.reduce(
+                // @ts-ignore
+                (max, line) => Math.max(max, line.width),
+                0
+            );
+            updateLayout();
+        },
+        [updateLayout]
+    );
+
+    const onTimeMeasure = useCallback(
+        // @ts-ignore
+        (e) => {
+            timeWidth.current = e.nativeEvent.lines.reduce(
+                // @ts-ignore
+                (max, line) => Math.max(max, line.width),
+                0
+            );
+            updateLayout();
+        },
+        [updateLayout]
+    );
+
+    const visibleNameWidth = useRef(0);
+    const visibleTimeWidth = useRef(0);
+
+    const checkVisibleOverflow = useCallback(() => {
+        if (isStacked || rowWidth <= 0) return;
+        if (visibleNameWidth.current > 0 && visibleTimeWidth.current > 0) {
+            if (visibleNameWidth.current + visibleTimeWidth.current + ROW_GAP > rowWidth) {
+                setIsStacked(true);
+            }
+        }
+    }, [isStacked, rowWidth]);
+
+    const onVisibleNameLayout = useCallback(
+        // @ts-ignore
+        (e) => {
+            visibleNameWidth.current = e.nativeEvent.layout.width;
+            checkVisibleOverflow();
+        },
+        [checkVisibleOverflow]
+    );
+
+    const onVisibleTimeLayout = useCallback(
+        // @ts-ignore
+        (e) => {
+            visibleTimeWidth.current = e.nativeEvent.layout.width;
+            checkVisibleOverflow();
+        },
+        [checkVisibleOverflow]
+    );
+
+    return (
+        <View className="p-4">
+            <View
+                pointerEvents="none"
+                style={{ position: "absolute", opacity: 0, top: 0, left: -9999 }}
+            >
+                <Text
+                    className="text-base font-semibold text-neutral-800"
+                    onTextLayout={onNameMeasure}
+                    allowFontScaling
+                >
+                    {prayerName}
+                </Text>
+                <Text
+                    className="text-base text-neutral-800"
+                    onTextLayout={onTimeMeasure}
+                    allowFontScaling
+                >
+                    {time}
+                </Text>
+            </View>
+
+            <View onLayout={(e) => setRowWidth(e.nativeEvent.layout.width)}>
+            {isStacked ? (
+                <View className="flex-row items-start gap-3">
+                    <Text
+                        className="min-w-0 flex-1 text-base font-semibold text-neutral-800"
+                        allowFontScaling
+                    >
+                        {prayerName}
+                    </Text>
+                    <Text
+                        className="min-w-0 flex-1 text-right text-base text-neutral-800"
+                        allowFontScaling
+                    >
+                        {time}
+                    </Text>
+                </View>
+            ) : (
+                <View className="flex-row items-center justify-between gap-3">
+                    <Text
+                        className="text-base font-semibold text-neutral-800"
+                        numberOfLines={1}
+                        allowFontScaling
+                        onLayout={onVisibleNameLayout}
+                    >
+                        {prayerName}
+                    </Text>
+                    <Text
+                        className="shrink-0 text-base text-neutral-800"
+                        numberOfLines={1}
+                        allowFontScaling
+                        onLayout={onVisibleTimeLayout}
+                    >
+                        {time}
+                    </Text>
+                </View>
+            )}
+            </View>
+        </View>
+    );
+}
 
 export default function MinyanTimes() {
     const insets = useSafeAreaInsets();
@@ -156,24 +301,11 @@ export default function MinyanTimes() {
                 end={{ x: 1, y: 0 }}
             >
             <View
-                className="flex-row items-center gap-3 p-4"
                 accessible={true}
                 accessibilityLabel={`Prayer name: ${item.PrayerName} at time: ${item.Time}`}
                 accessibilityRole="text"
             >
-                <Text
-                    className="flex-1 shrink text-base font-semibold text-neutral-800"
-                    allowFontScaling
-                    numberOfLines={3}
-                >
-                    {item.PrayerName}
-                </Text>
-                <Text
-                    className="shrink-0 text-base text-neutral-800"
-                    allowFontScaling
-                >
-                    {item.Time}
-                </Text>
+                <MinyanTimeRow prayerName={item.PrayerName} time={item.Time} />
             </View>
                 
             </LinearGradient>

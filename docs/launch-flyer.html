@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ohel Rachel App — Launch Flyer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #c8a045;
+      --gold-light: #f5ecd8;
+      --gold-dark: #9a7728;
+      --ink: #0f172a;
+      --muted: #475569;
+      --paper: #ffffff;
+      --cream: #fbfaf7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    @page {
+      size: letter;
+      margin: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: #e8e8e8;
+      color: var(--ink);
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .flyer {
+      width: 8.5in;
+      min-height: 11in;
+      background: var(--paper);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .top-bar {
+      height: 10px;
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-dark));
+    }
+
+    .hero {
+      padding: 0.55in 0.65in 0.35in;
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(200, 160, 69, 0.12), transparent 55%),
+        var(--cream);
+      border-bottom: 1px solid rgba(200, 160, 69, 0.25);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      background: var(--gold-light);
+      border: 1px solid rgba(200, 160, 69, 0.35);
+      border-radius: 999px;
+      padding: 7px 16px;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      width: 2.1in;
+      height: auto;
+      display: block;
+      margin: 0 auto 16px;
+    }
+
+    h1 {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    .subtitle {
+      font-size: 17px;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 5.8in;
+      margin: 0 auto;
+    }
+
+    .content {
+      padding: 0.42in 0.65in 0.35in;
+    }
+
+    .intro {
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 6.2in;
+      margin: 0 auto 28px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .feature {
+      background: var(--cream);
+      border: 1px solid rgba(200, 160, 69, 0.22);
+      border-radius: 14px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      border: 1px solid rgba(200, 160, 69, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      font-size: 20px;
+    }
+
+    .feature h2 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .feature p {
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .cta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      background: linear-gradient(135deg, #111827, #1f2937);
+      color: white;
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-bottom: 22px;
+    }
+
+    .cta h2 {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .cta p {
+      font-size: 14px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.82);
+      margin-bottom: 12px;
+    }
+
+    .store-line {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.02em;
+    }
+
+    .qr-box {
+      width: 1.35in;
+      height: 1.35in;
+      background: white;
+      border-radius: 12px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .qr-box img,
+    .qr-box canvas {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .qr-placeholder {
+      font-size: 10px;
+      line-height: 1.35;
+      color: #64748b;
+      padding: 8px;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(200, 160, 69, 0.25);
+      padding: 16px 0.65in 0.45in;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 11.5px;
+      color: var(--muted);
+      background: var(--cream);
+    }
+
+    .footer strong {
+      display: block;
+      color: var(--ink);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .edit-note {
+      max-width: 8.5in;
+      margin: 16px auto 0;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+      padding: 0 12px;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .flyer {
+        box-shadow: none;
+      }
+
+      .edit-note {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    HOW TO USE
+    1. Edit APP_STORE_URL below once your app is live.
+    2. Open this file in Chrome or Safari.
+    3. File → Print → Save as PDF (scale 100%, margins none).
+  -->
+  <script>
+    const APP_STORE_URL = "https://apps.apple.com/app/id0000000000"; // Replace with your App Store link
+  </script>
+
+  <article class="flyer">
+    <div class="top-bar"></div>
+
+    <header class="hero">
+      <div class="badge">Now Available</div>
+      <img class="logo" src="../assets/images/OhelRachelLogo.png" alt="Ohel Rachel logo" />
+      <h1>Stay Connected to Ohel Rachel</h1>
+      <p class="subtitle">
+        The official Ohel Rachel Beit Midrash app — events, minyan times, and donations in one place.
+      </p>
+    </header>
+
+    <section class="content">
+      <p class="intro">
+        No more missed updates in group chats. Get real-time announcements, prayer schedules,
+        and community giving options right on your phone.
+      </p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">📅</div>
+          <h2>Events &amp; Classes</h2>
+          <p>See upcoming shiurim, programs, and community events as they are posted.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🕍</div>
+          <h2>Minyan Times</h2>
+          <p>Check daily prayer schedules anytime — updated live for the kehillah.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">💛</div>
+          <h2>Support the Beit Midrash</h2>
+          <p>Donate easily via Zelle, Venmo, or PayPal directly from the app.</p>
+        </div>
+      </div>
+
+      <div class="cta">
+        <div>
+          <h2>Download the App</h2>
+          <p>Free on the App Store for iPhone and iPad. Search <strong>Ohel Rachel</strong> or scan the code.</p>
+          <div class="store-line">Search: Ohel Rachel · Beit Midrash App</div>
+        </div>
+        <div class="qr-box" id="qr-box">
+          <div class="qr-placeholder">Add App Store URL in this file to generate QR code</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <strong>Ohel Rachel Beit Midrash</strong>
+        Ohel Rachel Synagogue is a 501(c)(3) tax-exempt nonprofit organization.
+      </div>
+      <div style="text-align: right;">
+        <strong>Questions?</strong>
+        ohelrachel@yahoo.com · @Ohel-Rachel on Venmo
+      </div>
+    </footer>
+  </article>
+
+  <p class="edit-note">
+    Tip: Open <code>docs/launch-flyer.html</code>, replace <code>APP_STORE_URL</code> with your real App Store link, then print to PDF.
+  </p>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script>
+    (function () {
+      const box = document.getElementById("qr-box");
+      const url = typeof APP_STORE_URL === "string" ? APP_STORE_URL : "";
+
+      if (!url || url.includes("0000000000")) return;
+
+      box.innerHTML = "";
+      QRCode.toCanvas(url, { width: 120, margin: 1, color: { dark: "#0f172a", light: "#ffffff" } }, function (err, canvas) {
+        if (err) {
+          box.innerHTML = '<div class="qr-placeholder">QR code could not be generated</div>';
+          return;
+        }
+        box.appendChild(canvas);
+      });
+    })();
+  </script>
+</body>
+</html>

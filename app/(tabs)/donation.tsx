@@ -181,9 +181,9 @@ const DonationScreen: React.FC = () => {
         <SafeAreaView className="flex-1 bg-[#F8FAFC]" edges={["top", "left", "right"]}>
         <ScrollView className="px-5" contentContainerClassName="pb-8">
             <Text className="text-[#0F172A] font-extrabold text-[28px] mt-4 mb-1">Support Our Community</Text>
-            <Text className="text-[#0F172A] text-base leading-6 mb-4">Thank you for helping us sustain programs, services, and Torah learning.</Text>
+            <Text className="text-[#0F172A] text-base leading-6 mb-4">Thank you for helping us sustain services, programs, and Torah learning.</Text>
 
-            {/* Zelle */}
+            {/* {/* Zelle */ }
             <SectionCard title="Zelle (Preferred)" subsection={"Direct bank transfer"}>
                 <Text style={cardBodyStyle} className="mb-3">Zelle transfers go directly to our account (No Platform Fees). In your banking app, choose Zelle and send to the details below. Click on the email address to copy it.</Text>
                 <InlineCopyRow label="Email" value={donations?.zelleInfo ?? "loading..."} />
@@ -227,9 +227,11 @@ const DonationScreen: React.FC = () => {
 
             {/* Tax / receipt info */}
             <View style={[cardStyle, { marginTop: 8 }]}>
-                <Text className="text-[#0F172A] text-sm font-bold mb-1.5">Receipt Information</Text>
+                <Text className="text-[#0F172A] text-sm font-bold mb-1.5">Receipt & Tax Information</Text>
                 <Text className="text-[#0F172A] text-xs leading-5">
-                    Ohel Rachel Synagogue is a 501(c)(3) nonprofit. If you need a receipt, please email {CONFIG.ZELLE_EMAIL} with your name, amount, date, and payment method.
+                    Ohel Rachel Synagogue is a 501(c)(3) tax-exempt nonprofit organization. 
+                    Donations are tax-deductible to the extent allowed by law. If you need a 
+                    receipt for your records, please email info@faribayouragent.com with your name, donation amount, date, and payment method.
                 </Text>
             </View>
 

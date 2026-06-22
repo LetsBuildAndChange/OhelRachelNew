@@ -5,7 +5,7 @@
     "slug": "OhelRachelNew",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/OhelRachelLogo.png",
     "scheme": "ohelrachelnew",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -18,7 +18,8 @@
         ],
         "ITSAppUsesNonExemptEncryption": false
       },
-      "bundleIdentifier": "com.eitanab.OhelRachelNew"
+      "bundleIdentifier": "org.ohelrachel.app",
+       "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {

@@ -1,9 +1,8 @@
 import React, {PropsWithChildren, useEffect, useState} from "react";
 import { ScrollView, View, Image, StatusBar, Text, Pressable, ActivityIndicator} from "react-native";
-import {images} from "@/constants/images";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {db} from "@/lib/Firebase";
-import {collection, onSnapshot} from "firebase/firestore";
+import {collection, onSnapshot, orderBy, query} from "firebase/firestore";
 
 const Colors = {
     gold: "#D4AF37",     //  gold
@@ -90,7 +89,8 @@ const renderItem = ({item}: any) => {
     useEffect(() => {
         setLoading(true);
         const q = collection(db, "Events");
-        const list = onSnapshot(q, (onSnapshot) => {
+        const qItems = query(q, orderBy("index", "desc"));
+        const list = onSnapshot(qItems, (onSnapshot) => {
                 const items = onSnapshot.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data()
@@ -121,8 +121,9 @@ const renderItem = ({item}: any) => {
                 {/* Hero */}
                 <View style={{alignItems: "center", marginBottom: 20}}>
                     <Image
-                        source={images.newlogo}
-                        style={{width: 150, height: 150, marginBottom: 8, resizeMode: "contain"}}
+                        source={require("@/assets/images/NewAppLogo.png")}
+                        style={{width: 200, height: 170, marginBottom: 8}}
+                        resizeMode="contain"
                     />
                     <Text style={{fontSize: 28, fontWeight: "700", color: Colors.text}}>
                         Ohel Rachel
@@ -135,7 +136,7 @@ const renderItem = ({item}: any) => {
                 {/* Info card */}
                 <Card>
                     <CardTitle>Welcome</CardTitle>
-                    <Text style={{fontSize: 16, lineHeight: 20, color: Colors.text, gap:3}}>
+                    <Text style={{fontSize: 17, lineHeight: 20, color: Colors.text, gap:3}}>
                         We’re delighted to have you here. Discover our events, minyanim, and learning,
                         and see how to support the community.
                     </Text>
@@ -156,7 +157,7 @@ const renderItem = ({item}: any) => {
                 {events.length > 0 ? (
                     events.map((item) =>
                         <View key={item.id} style={{gap: 6}}>
-                            <Text className = {"mb-3 text-[#0F172A]"} style={{ fontSize: 16, color: Colors.text, gap: 3 }}>{item.info}</Text>
+                            <Text className = {"mb-3 text-[#0F172A]"} style={{ fontSize: 17, color: Colors.text, gap: 3 }}>{item.info}</Text>
                         </View>
                     )
                 ) : (
