@@ -396,8 +396,8 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                     <Text style={{fontSize: 26, fontWeight: "700", color: Colors.text}}>
                         Ohel Rachel
                     </Text>
-                    <Text style={{fontSize: 16, color: Colors.muted, marginTop: 6, textAlign: "center"}}>
-                    Explore events, classes, minyan times, community updates, and ways to contribute.
+                    <Text style={{fontSize: 17, color: Colors.text, marginTop: 6, textAlign: "center"}}>
+                    Welcome to the Ohel Rachel App! {'\n'} Explore events, classes, minyan times, community updates, and ways to contribute.
                     </Text>
                 </View>
 
