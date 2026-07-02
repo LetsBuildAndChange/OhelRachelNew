@@ -1,8 +1,9 @@
 import { db } from "@/lib/Firebase";
+import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { doc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Linking, Pressable, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Alert, Animated, Linking, Pressable, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 type DonationInfo = {
     zelleInfo: string;
@@ -82,28 +83,88 @@ const SectionCard: React.FC<{ title: string; children: React.ReactNode; subsecti
     </View>
 );
 
-const ActionButton: React.FC<{ label: string; onPress: () => void }>= ({ label, onPress }) => (
-    <Pressable
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        className="bg-[#B59410] rounded-xl items-center justify-center py-3 px-4 mb-2 active:opacity-90"
-        android_ripple={{ color: "#283a99" }}
-    >
-        <Text className="text-white font-bold text-sm">{label}</Text>
-    </Pressable>
-);
-const SmallActionButton: React.FC<{ label: string; onPress: () => void }>= ({ label, onPress }) => (
-    <Pressable
-        onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        className="bg-[#B59410] rounded-lg items-center justify-center py-2 px-3 mb-2 active:opacity-90"
-        android_ripple={{ color: "#283a99" }}
-    >
-        <Text className="text-white font-bold text-xs">{label}</Text>
-    </Pressable>
-);
+const ActionButton: React.FC<{ label: string; onPress: () => void; icon?: keyof typeof Ionicons.glyphMap }> = ({ label, onPress, icon = "open-outline" }) => {
+    const scale = useRef(new Animated.Value(1)).current;
+    const handlePressIn = () => Animated.spring(scale, { toValue: 0.96, useNativeDriver: true, speed: 50, bounciness: 0 }).start();
+    const handlePressOut = () => Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 4 }).start();
+
+    return (
+        <Pressable
+            onPress={onPress}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            accessibilityRole="button"
+            accessibilityLabel={label}
+        >
+            {({ pressed }) => (
+                <Animated.View style={{
+                    transform: [{ scale }],
+                    backgroundColor: pressed ? "#9A7D0A" : "#B59410",
+                    borderRadius: 10,
+                    paddingVertical: 9,
+                    paddingHorizontal: 13,
+                    marginBottom: 8,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
+                    shadowColor: "#B59410",
+                    shadowOpacity: 0.4,
+                    shadowRadius: 8,
+                    shadowOffset: { width: 0, height: 3 },
+                    elevation: 4,
+                    borderWidth: 1,
+                    borderColor: "#9A7D0A",
+                }}>
+                    <Ionicons name={icon} size={14} color="#1F2937" />
+                    <Text style={{ color: "#1F2937", fontWeight: "700", fontSize: 13, letterSpacing: 0.2 }}>{label}</Text>
+                </Animated.View>
+            )}
+        </Pressable>
+    );
+};
+
+const SmallActionButton: React.FC<{ label: string; onPress: () => void; icon?: keyof typeof Ionicons.glyphMap }> = ({ label, onPress, icon = "share-outline" }) => {
+    const scale = useRef(new Animated.Value(1)).current;
+    const handlePressIn = () => Animated.spring(scale, { toValue: 0.95, useNativeDriver: true, speed: 50, bounciness: 0 }).start();
+    const handlePressOut = () => Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 4 }).start();
+
+    return (
+        <Pressable
+            onPress={onPress}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            accessibilityRole="button"
+            accessibilityLabel={label}
+        >
+            {({ pressed }) => (
+                <Animated.View style={{
+                    transform: [{ scale }],
+                    backgroundColor: pressed ? "#9A7D0A" : "#B59410",
+                    borderRadius: 8,
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                    marginBottom: 8,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 4,
+                    borderWidth: 1,
+                    borderColor: "#9A7D0A",
+                    alignSelf: "flex-start",
+                    shadowColor: "#B59410",
+                    shadowOpacity: 0.35,
+                    shadowRadius: 6,
+                    shadowOffset: { width: 0, height: 3 },
+                    elevation: 3,
+                }}>
+                    <Ionicons name={icon} size={12} color="#1F2937" />
+                    <Text style={{ color: "#1F2937", fontWeight: "700", fontSize: 11, letterSpacing: 0.2 }}>{label}</Text>
+                </Animated.View>
+            )}
+        </Pressable>
+    );
+};
 
 const InlineCopyRow: React.FC<{ label: string; value: string }>= ({ label, value }) => (
     <View className="flex-row items-center justify-between bg-[#0e1630] border border-[#1f2b55] rounded-xl py-2.5 px-3 mb-2 gap-3">

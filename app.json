@@ -3,7 +3,7 @@
     "description": "Ohel Rachel Beit Midrash App",
     "name": "Ohel Rachel",
     "slug": "OhelRachelNew",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/OhelRachelLogo.png",
     "scheme": "ohelrachelnew",

@@ -1,9 +1,11 @@
 import { db } from "@/lib/Firebase";
+import { Ionicons } from "@expo/vector-icons";
 import { collection, doc, onSnapshot } from "firebase/firestore";
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
 import {
     ActivityIndicator,
     Alert,
+    Animated,
     Image,
     ImageSourcePropType,
     Linking,
@@ -25,6 +27,16 @@ const Colors = {
     border: "#E2E8F0",
 };
 
+type ClassItem = {
+    id: string;
+    title: string;
+    time?: string;
+    teacher?: string;
+    topic?: string;
+    index: number;
+    isVisible: boolean;
+};
+
 type EventItem = {
     id: string;
     title: string;
@@ -33,6 +45,8 @@ type EventItem = {
     description?: string;
     imageUrl?: string;
     eventUrl?: string;
+    urlTitle?: string;
+    urlDescription?: string;
     index: number;
     isVisible: boolean;
 };
@@ -70,32 +84,70 @@ type PrimaryButtonProps = {
 }
 
 function PrimaryButton({ label, onPress }: PrimaryButtonProps) {
+    const scale = useRef(new Animated.Value(1)).current;
+
+    const handlePressIn = () => {
+        Animated.spring(scale, { toValue: 0.96, useNativeDriver: true, speed: 50, bounciness: 0 }).start();
+    };
+    const handlePressOut = () => {
+        Animated.spring(scale, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 4 }).start();
+    };
+
     return (
         <Pressable
             onPress={onPress}
-            style={({ pressed }) => ({
-                marginTop: 12,
-                backgroundColor: Colors.gold,
-                opacity: pressed ? 0.9 : 1,
-                borderRadius: 12,
-                paddingVertical: 12,
-                alignItems: "center",
-            })}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
             accessibilityRole="button"
             accessibilityLabel={label}
         >
-            <Text style={{ color: "#1F2937", fontWeight: "700", fontSize: 16 }}>
-                {label}
-            </Text>
+            {({ pressed }) => (
+                <Animated.View
+                    style={{
+                        marginTop: 10,
+                        transform: [{ scale }],
+                        backgroundColor: pressed ? "#B8961E" : Colors.gold,
+                        borderRadius: 10,
+                        paddingVertical: 8,
+                        paddingHorizontal: 14,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 5,
+                        shadowColor: Colors.gold,
+                        shadowOpacity: 0.35,
+                        shadowRadius: 6,
+                        shadowOffset: { width: 0, height: 3 },
+                        elevation: 3,
+                        borderWidth: 1,
+                        borderColor: "#C49B20",
+                        alignSelf: "flex-start",
+                    }}
+                >
+                    <Ionicons name="link-outline" size={14} color="#1F2937" />
+                    <Text style={{ color: "#1F2937", fontWeight: "700", fontSize: 13, letterSpacing: 0.2 }}>
+                        {label}
+                    </Text>
+                    <Ionicons name="open-outline" size={12} color="#1F2937" style={{ opacity: 0.7 }} />
+                </Animated.View>
+            )}
         </Pressable>
     );
 }
 
 /** Reusable bits */
 
-function CardTitle({ children }: PropsWithChildren) {
+function CardTitle({ children, showDivider = true }: PropsWithChildren<{ showDivider?: boolean }>) {
     return (
-        <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 8 }}>
+        <Text style={{
+            fontSize: 20,
+            fontWeight: "700",
+            color: Colors.text,
+            paddingBottom: showDivider ? 10 : 0,
+            marginBottom: showDivider ? 10 : 8,
+            borderBottomWidth: showDivider ? 1 : 0,
+            borderBottomColor: Colors.border,
+        }}>
             {children}
         </Text>
     );
@@ -123,6 +175,43 @@ function Card({ children }: PropsWithChildren) {
     );
 }
 
+function getRowDividerStyle(isLast: boolean) {
+    return {
+        marginBottom: isLast ? 0 : 12,
+        paddingBottom: isLast ? 0 : 12,
+        borderBottomWidth: isLast ? 0 : 1,
+        borderBottomColor: Colors.border,
+    };
+}
+
+type ClassRowProps = {
+    classItem: ClassItem;
+    isLast: boolean;
+};
+
+function ClassRow({ classItem, isLast }: ClassRowProps) {
+    const timeTeacher = [classItem.time, classItem.teacher].filter(Boolean).join(" • ");
+    const topic = classItem.topic?.trim();
+
+    return (
+        <View style={getRowDividerStyle(isLast)}>
+            <Text style={{ fontSize: 18.5, fontWeight: "700", color: Colors.text, marginBottom: 4 }}>
+                {classItem.title}
+            </Text>
+            {timeTeacher ? (
+                <Text style={{ fontSize: 16, color: Colors.muted, marginBottom: topic ? 4 : 0 }}>
+                    {timeTeacher}
+                </Text>
+            ) : null}
+            {topic ? (
+                <Text style={{ fontSize: 17, color: Colors.text, lineHeight: 22 }}>
+                    {topic}
+                </Text>
+            ) : null}
+        </View>
+    );
+}
+
 type EventRowProps = {
     event: EventItem;
     isLast: boolean;
@@ -134,12 +223,12 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
     const imageSource = event.imageUrl ? getEventImageSource(event.imageUrl) : null;
 
     return (
-        <View style={{ marginBottom: isLast ? 0 : 16, paddingBottom: isLast ? 0 : 16, borderBottomWidth: isLast ? 0 : 1, borderBottomColor: Colors.border }}>
-            <Text style={{ fontSize: 16, fontWeight: "700", color: Colors.text, marginBottom: 4 }}>
+        <View style={getRowDividerStyle(isLast)}>
+            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 4 }}>
                 {event.title}
             </Text>
             {dateTime ? (
-                <Text style={{ fontSize: 15, color: Colors.muted, marginBottom: event.description ? 6 : 0 }}>
+                <Text style={{ fontSize: 16, color: Colors.muted, marginBottom: event.description ? 4 : 0 }}>
                     {dateTime}
                 </Text>
             ) : null}
@@ -167,17 +256,24 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                 </View>
             ) : null}
             {event.eventUrl ? (
-                <PrimaryButton
-                    label="More Information"
-                    onPress={() => openEventUrl(event.eventUrl!)}
-                />
+                <>
+                    {event.urlDescription ? (
+                        <Text style={{ fontSize: 15, color: Colors.text, marginTop: 11 }}>
+                            {event.urlDescription}
+                        </Text>
+                    ) : null}
+                    <PrimaryButton
+                        label={event.urlTitle ?? "Click here for RSVP Link"}
+                        onPress={() => openEventUrl(event.eventUrl!)}
+                    />
+                </>
             ) : null}
         </View>
     );
 }
 
  function HomeScreen() {
-    const [classes, setClasses] = useState<any[]>([]);
+    const [classes, setClasses] = useState<ClassItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [contactInfo, setContactInfo] = useState<any | null>(null);
     const [loadingContactInfo, setLoadingContactInfo] = useState(true);
@@ -197,9 +293,9 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
             collection(db, "Classes"),
             (snapshot) => {
                 const items = snapshot.docs
-                    .map((doc) => ({ id: doc.id, ...doc.data() } as any))
+                    .map((docSnap) => ({ id: docSnap.id, ...docSnap.data() } as ClassItem))
                     .filter((item) => item.isVisible !== false)
-                    .sort((a, b) => Number(b.index) - Number(a.index));
+                    .sort((a, b) => Number(a.index) - Number(b.index));
                 setClasses(items);
                 setLoading(false);
             },
@@ -297,7 +393,7 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                         style={{width: 200, height: 170, marginBottom: 8}}
                         resizeMode="contain"
                     />
-                    <Text style={{fontSize: 28, fontWeight: "700", color: Colors.text}}>
+                    <Text style={{fontSize: 26, fontWeight: "700", color: Colors.text}}>
                         Ohel Rachel
                     </Text>
                     <Text style={{fontSize: 16, color: Colors.muted, marginTop: 6, textAlign: "center"}}>
@@ -316,23 +412,22 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
 
                 <View style={styles.cardStyle}>
                     <CardTitle>Weekly Classes</CardTitle>
-                {classes.length > 0 ? (
-                    classes.map((item, index) =>
-                        <Text
-                            key={item.id}
-                            style={{
-                                fontSize: 17,
-                                color: Colors.text,
-                                marginBottom: index < classes.length - 1 ? 12 : 0,
-                            }}
-                        >
-                            {item.info}
-                        </Text>
-                    )
-                ) : (
-                    <Text style={styles.textStyle}>No upcoming classes.</Text>
-                )}
-            </View>
+                    {loading ? (
+                        <ActivityIndicator size="small" color={Colors.gold} />
+                    ) : error ? (
+                        <Text style={styles.textStyle}>Unable to load classes.</Text>
+                    ) : classes.length > 0 ? (
+                        classes.map((classItem, index) => (
+                            <ClassRow
+                                key={classItem.id}
+                                classItem={classItem}
+                                isLast={index === classes.length - 1}
+                            />
+                        ))
+                    ) : (
+                        <Text style={styles.textStyle}>No upcoming classes.</Text>
+                    )}
+                </View>
             
             <View style={styles.cardStyle}>
                 <CardTitle>Upcoming Events</CardTitle>
@@ -355,7 +450,7 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
             </View>
 
             <View style={styles.cardStyle}>
-                <CardTitle>Community Updates</CardTitle>
+                <CardTitle showDivider={true}>Community Updates</CardTitle>
                 {communityUpdates.length > 0 ? (
                     communityUpdates.map((item, index) =>
                         <Text
@@ -375,7 +470,7 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
             </View>
 
             <View style={styles.cardStyle}>
-                <CardTitle>Contact Us</CardTitle>
+                <CardTitle showDivider={true}>Contact Us</CardTitle>
                 <Text style={styles.textStyle}>
                     {contactInfo?.info}
                 </Text>
@@ -422,7 +517,9 @@ const styles = {
     cardStyle: { 
         backgroundColor: Colors.surface,
                 borderRadius: 16,
-                padding: 16,
+                paddingTop: 12,
+                paddingHorizontal: 16,
+                paddingBottom: 16,
                 borderWidth: 1,
                 borderColor: Colors.border,
                 marginBottom: 16,
