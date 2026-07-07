@@ -237,11 +237,9 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                 </Text>
             ) : null}
             {event.description ? (
-                <View collapsable={false} style={{ flexShrink: 0 }}>
-                    <Text style={{ fontSize: BODY_TEXT_SIZE, color: Colors.text, lineHeight: BODY_TEXT_LINE_HEIGHT }}>
-                        {event.description}
-                    </Text>
-                </View>
+                <Text style={{ fontSize: BODY_TEXT_SIZE, color: Colors.text, lineHeight: BODY_TEXT_LINE_HEIGHT }}>
+                    {event.description}
+                </Text>
             ) : null}
             {imageSource ? (
                 <View style={{ marginTop: 12 }}>
