@@ -27,6 +27,10 @@ const Colors = {
     border: "#E2E8F0",
 };
 
+const BODY_TEXT_SIZE = 17;
+// iOS RN text layout can clip the last wrapped line at certain fontSize/lineHeight pairs (e.g. 17/22).
+const BODY_TEXT_LINE_HEIGHT = 22.1;
+
 type ClassItem = {
     id: string;
     title: string;
@@ -195,7 +199,7 @@ function ClassRow({ classItem, isLast }: ClassRowProps) {
 
     return (
         <View style={getRowDividerStyle(isLast)}>
-            <Text style={{ fontSize: 18.5, fontWeight: "700", color: Colors.text, marginBottom: 4 }}>
+            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 4 }}>
                 {classItem.title}
             </Text>
             {timeTeacher ? (
@@ -204,7 +208,7 @@ function ClassRow({ classItem, isLast }: ClassRowProps) {
                 </Text>
             ) : null}
             {topic ? (
-                <Text style={{ fontSize: 17, color: Colors.text, lineHeight: 22 }}>
+                <Text style={{ fontSize: BODY_TEXT_SIZE, color: Colors.text, lineHeight: BODY_TEXT_LINE_HEIGHT }}>
                     {topic}
                 </Text>
             ) : null}
@@ -233,9 +237,11 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                 </Text>
             ) : null}
             {event.description ? (
-                <Text style={{ fontSize: 17, color: Colors.text, lineHeight: 22 }}>
-                    {event.description}
-                </Text>
+                <View collapsable={false} style={{ flexShrink: 0 }}>
+                    <Text style={{ fontSize: BODY_TEXT_SIZE, color: Colors.text, lineHeight: BODY_TEXT_LINE_HEIGHT }}>
+                        {event.description}
+                    </Text>
+                </View>
             ) : null}
             {imageSource ? (
                 <View style={{ marginTop: 12 }}>
@@ -257,11 +263,11 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
             ) : null}
             {event.eventUrl ? (
                 <>
-                    {event.urlDescription ? (
+                    {/* {event.urlDescription ? (
                         <Text style={{ fontSize: 15, color: Colors.text, marginTop: 11 }}>
                             {event.urlDescription}
                         </Text>
-                    ) : null}
+                    ) : null} */}
                     <PrimaryButton
                         label={event.urlTitle ?? "Click here for RSVP Link"}
                         onPress={() => openEventUrl(event.eventUrl!)}
@@ -397,7 +403,8 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                         Ohel Rachel
                     </Text>
                     <Text style={{fontSize: 17, color: Colors.text, marginTop: 6, textAlign: "center"}}>
-                    Welcome to the Ohel Rachel App! {'\n'} Explore events, classes, minyan times, community updates, and ways to contribute.
+                    Welcome to the Ohel Rachel App! {'\n'} 
+                    Explore events, classes, minyan times, community updates, and ways to contribute.
                     </Text>
                 </View>
 
@@ -456,7 +463,7 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                         <Text
                             key={item.id}
                             style={{
-                                fontSize: 17,
+                                fontSize: 16,
                                 color: Colors.text,
                                 marginBottom: index < communityUpdates.length - 1 ? 12 : 0,
                             }}

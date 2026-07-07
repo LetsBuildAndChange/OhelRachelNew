@@ -13,6 +13,7 @@ type DonationInfo = {
 };
 
 const Colors = {
+    gold: "#D4AF37",
     surface: "#FFFFFF",
     border: "#E2E8F0",
 };
@@ -99,7 +100,7 @@ const ActionButton: React.FC<{ label: string; onPress: () => void; icon?: keyof 
             {({ pressed }) => (
                 <Animated.View style={{
                     transform: [{ scale }],
-                    backgroundColor: pressed ? "#9A7D0A" : "#B59410",
+                    backgroundColor: pressed ? "#B8961E" : Colors.gold,
                     borderRadius: 10,
                     paddingVertical: 9,
                     paddingHorizontal: 13,
@@ -108,13 +109,13 @@ const ActionButton: React.FC<{ label: string; onPress: () => void; icon?: keyof 
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 6,
-                    shadowColor: "#B59410",
-                    shadowOpacity: 0.4,
-                    shadowRadius: 8,
+                    shadowColor: Colors.gold,
+                    shadowOpacity: 0.35,
+                    shadowRadius: 6,
                     shadowOffset: { width: 0, height: 3 },
-                    elevation: 4,
+                    elevation: 3,
                     borderWidth: 1,
-                    borderColor: "#9A7D0A",
+                    borderColor: "#C49B20",
                 }}>
                     <Ionicons name={icon} size={14} color="#1F2937" />
                     <Text style={{ color: "#1F2937", fontWeight: "700", fontSize: 13, letterSpacing: 0.2 }}>{label}</Text>
@@ -140,7 +141,7 @@ const SmallActionButton: React.FC<{ label: string; onPress: () => void; icon?: k
             {({ pressed }) => (
                 <Animated.View style={{
                     transform: [{ scale }],
-                    backgroundColor: pressed ? "#9A7D0A" : "#B59410",
+                    backgroundColor: pressed ? "#B8961E" : Colors.gold,
                     borderRadius: 8,
                     paddingVertical: 5,
                     paddingHorizontal: 10,
@@ -150,9 +151,9 @@ const SmallActionButton: React.FC<{ label: string; onPress: () => void; icon?: k
                     justifyContent: "center",
                     gap: 4,
                     borderWidth: 1,
-                    borderColor: "#9A7D0A",
+                    borderColor: "#C49B20",
                     alignSelf: "flex-start",
-                    shadowColor: "#B59410",
+                    shadowColor: Colors.gold,
                     shadowOpacity: 0.35,
                     shadowRadius: 6,
                     shadowOffset: { width: 0, height: 3 },
@@ -167,8 +168,8 @@ const SmallActionButton: React.FC<{ label: string; onPress: () => void; icon?: k
 };
 
 const InlineCopyRow: React.FC<{ label: string; value: string }>= ({ label, value }) => (
-    <View className="flex-row items-center justify-between bg-[#0e1630] border border-[#1f2b55] rounded-xl py-2.5 px-3 mb-2 gap-3">
-        <Text className="text-[#9fb2ff] font-semibold text-sm">{label}</Text>
+    <View className="flex-row items-center justify-between bg-[#0e1630] border border-[#1f2b55] rounded-xl py-2 px-3 mb-2 gap-3">
+        <Text className="text-[#9fb2ff] font-semibold text-base">{label}</Text>
         <TouchableOpacity
             onPress={() => copyToClipboard(value, label)}
             accessible={true}
@@ -176,7 +177,7 @@ const InlineCopyRow: React.FC<{ label: string; value: string }>= ({ label, value
             accessibilityLabel={`Copy ${label}: ${value}`}
             accessibilityHint="Double tap to copy to clipboard"
         >
-            <Text numberOfLines={1} className="text-[#9fb2ff] text-sm font-bold">{value}</Text>
+            <Text numberOfLines={1} className="text-[#9fb2ff] text-base font-bold">{value}</Text>
         </TouchableOpacity>
     </View>
 );
