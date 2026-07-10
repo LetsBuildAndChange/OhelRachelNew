@@ -1,16 +1,10 @@
-# Admin Setup (v2 — not in v1 release)
+# Admin Setup
 
-The in-app admin editor is **not shipped in v1**. Source lives at `screens/AdminScreen.tsx` for a future release.
+The in-app admin editor is available at `/admin`. It is not shown in the public tab bar.
 
-Until then, update minyan times and donation info in the **Firebase Console** (Firestore). Deployed `firestore.rules` still allow public read; client writes require an admin account when the app editor is enabled.
-
-When you enable the admin feature, wire the screen back into `app/_layout.tsx` as route `admin` (or move the file to `app/admin.tsx`).
+Open the app and navigate to `/admin` (e.g. via Expo dev tools or deep link), then sign in with an admin account. After sign-in, choose a section from the menu to edit.
 
 ---
-
-## Planned setup (when enabling admin)
-
-The admin editor will live at `/admin`. It will not be shown in the public tab bar.
 
 ## 1. Enable sign in
 
@@ -39,7 +33,7 @@ The document can be empty, or it can include helpful fields:
 
 ## 4. Deploy rules
 
-Deploy `firestore.rules` so only admins can edit minyan times.
+Deploy `firestore.rules` so only admins can write app content.
 
 ```sh
 firebase deploy --only firestore:rules
@@ -47,4 +41,29 @@ firebase deploy --only firestore:rules
 
 ## 5. Open the editor
 
-Open `/admin`, sign in with the admin account, and edit the active schedule.
+Open `/admin`, sign in with the admin account, then pick a section:
+
+| Section | Firestore path | What it controls |
+|---------|----------------|------------------|
+| Minyan Times | `settings/app/schedules/{scheduleId}/sections/.../items/...` | Prayer schedules on the Minyan tab |
+| Events | `Event/{id}` | Upcoming events on the home screen |
+| Weekly Classes | `Classes/{id}` | Class listings on the home screen |
+| Community Updates | `CommunityUpdates/{id}` | Announcements on the home screen |
+| Contact Info | `ContactInfo/info` | Contact Us text on the home screen |
+| Donation Info | `DonationInfo/info` | Zelle, PayPal, and Venmo details on the Donation tab |
+
+### Minyan notes
+
+- Set the active schedule ID under **Minyan Times** to switch which schedule the app displays.
+- Sections and prayer times support a visibility toggle for draft content.
+
+### Events notes
+
+- `imageUrl` can be an `https://` link or a bundled asset filename (e.g. `BuildingFundraiserFlyer.png`).
+- `eventUrl` is the RSVP or external link opened from the event card.
+- Events must have `isVisible: true` to appear in the app.
+
+### List collections (Classes, Community Updates, Events)
+
+- Use **index** to control display order.
+- Use the **Visible** toggle to hide items without deleting them.

@@ -37,7 +37,22 @@ service cloud.firestore {
       }
     }
 
-    match /Events/{eventId} {
+    match /Classes/{classId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /CommunityUpdates/{updateId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /Event/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /ContactInfo/{docId} {
       allow read: if true;
       allow write: if isAdmin();
     }
