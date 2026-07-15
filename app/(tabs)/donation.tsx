@@ -32,10 +32,10 @@ const cardStyle = {
     elevation: 2,
 };
 
-const bodyTextStyle = { fontSize: 16, lineHeight: 20, color: "#0F172A" as const };
+const bodyTextStyle = { fontSize: 16, lineHeight: 23, color: "#0F172A" as const };
 const cardBodyStyle = { ...bodyTextStyle, marginTop: -3 };
 const cardTitleStyle = { fontSize: 18, fontWeight: "700" as const, color: "#0F172A" as const };
-const subsectionStyle = { fontSize: 14, lineHeight: 17, color: "#6B7280" as const, marginBottom: 2 };
+const subsectionStyle = { fontSize: 14, lineHeight: 17, color: "#6B7280" as const, marginBottom: 5, marginTop: 1};
 
 const CONFIG = {
     PAYPAL_DONATION_URL: "https://www.paypal.com/donate?hosted_button_id=MHRPD75CUWEQN&Z3JncnB0=",
@@ -289,8 +289,8 @@ const DonationScreen: React.FC = () => {
 
             {/* Tax / receipt info */}
             <View style={[cardStyle, { marginTop: 8 }]}>
-                <Text className="text-[#0F172A] text-sm font-bold mb-1.5">Receipt & Tax Information</Text>
-                <Text className="text-[#0F172A] text-xs leading-5">
+                <Text className="text-[#0F172A] text-s font-bold mb-1.5">Receipt & Tax Information</Text>
+                <Text className="text-[#0F172A] text-sm leading-5 lineHeight-1" style={{ lineHeight: 20 }}>
                     Ohel Rachel Synagogue is a 501(c)(3) tax-exempt nonprofit organization. 
                     Donations are tax-deductible to the extent allowed by law. If you need a 
                     receipt for your records, please email info@faribayouragent.com with your name, donation amount, date, and payment method.
