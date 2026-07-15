@@ -193,13 +193,14 @@ type ClassRowProps = {
     isLast: boolean;
 };
 
+
 function ClassRow({ classItem, isLast }: ClassRowProps) {
     const timeTeacher = [classItem.time, classItem.teacher].filter(Boolean).join(" • ");
     const topic = classItem.topic?.trim();
 
     return (
         <View style={getRowDividerStyle(isLast)}>
-            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 4 }}>
+            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 2 }}>
                 {classItem.title}
             </Text>
             {timeTeacher ? (
@@ -208,7 +209,7 @@ function ClassRow({ classItem, isLast }: ClassRowProps) {
                 </Text>
             ) : null}
             {topic ? (
-                <Text style={{ fontSize: BODY_TEXT_SIZE, color: Colors.text, lineHeight: BODY_TEXT_LINE_HEIGHT }}>
+                <Text style={styles.textStyle}>
                     {topic}
                 </Text>
             ) : null}
@@ -228,7 +229,7 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
 
     return (
         <View style={getRowDividerStyle(isLast)}>
-            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 4 }}>
+            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 2 }}>
                 {event.title}
             </Text>
             {dateTime ? (
@@ -237,7 +238,7 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                 </Text>
             ) : null}
             {event.description ? (
-                <Text style={{ fontSize: BODY_TEXT_SIZE, color: Colors.text, lineHeight: BODY_TEXT_LINE_HEIGHT }}>
+                <Text style={{...styles.textStyle}}>
                     {event.description}
                 </Text>
             ) : null}
@@ -400,7 +401,7 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                     <Text style={{fontSize: 26, fontWeight: "700", color: Colors.text}}>
                         Ohel Rachel
                     </Text>
-                    <Text style={{fontSize: 17, color: Colors.text, marginTop: 6, textAlign: "center"}}>
+                    <Text style = {{...styles.headerTextStyle, marginTop: 6, textAlign: "center"}}>
                     Welcome to the Ohel Rachel App! {'\n'} 
                     Explore events, classes, minyan times, community updates, and ways to contribute.
                     </Text>
@@ -461,9 +462,8 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
                         <Text
                             key={item.id}
                             style={{
-                                fontSize: 16,
-                                color: Colors.text,
-                                marginBottom: index < communityUpdates.length - 1 ? 12 : 0,
+                                ...styles.textStyle,
+                                marginBottom: index < communityUpdates.length - 1 ? 13 : 0,
                             }}
                         >
                             {item.info}
@@ -536,9 +536,15 @@ const styles = {
     },
     textStyle: {
          fontSize: 17, 
-         color: Colors.text 
-        
-    }
+         lineHeight: 24,
+         color: Colors.text
+    },
+    headerTextStyle: {
+         fontSize: 17, 
+            lineHeight: 23,
+         color: Colors.text
+    },
+
 };
 
 
