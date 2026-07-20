@@ -200,7 +200,7 @@ function ClassRow({ classItem, isLast }: ClassRowProps) {
 
     return (
         <View style={getRowDividerStyle(isLast)}>
-            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 2 }}>
+            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text}}>
                 {classItem.title}
             </Text>
             {timeTeacher ? (
@@ -229,7 +229,7 @@ function EventRow({ event, isLast, onImagePress }: EventRowProps) {
 
     return (
         <View style={getRowDividerStyle(isLast)}>
-            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text, marginBottom: 2 }}>
+            <Text style={{ fontSize: 18, fontWeight: "700", color: Colors.text }}>
                 {event.title}
             </Text>
             {dateTime ? (
@@ -536,7 +536,7 @@ const styles = {
     },
     textStyle: {
          fontSize: 17, 
-         lineHeight: 24,
+         lineHeight: 23,
          color: Colors.text
     },
     headerTextStyle: {

@@ -44,14 +44,24 @@ const CONFIG = {
     ZELLE_EMAIL: "ohelrachel@yahoo.com",
 };
 
-const openLink = async (url: string) => {
+const openLink = async (url: string, fallbackUrl?: string) => {
     if (!url) {
-    Alert.alert("Missing link", "This link is not configured.");
-    return;
-  }
-    const supported = await Linking.canOpenURL(url);
-    if (supported) return Linking.openURL(url);
-    Alert.alert("Unable to open link", "Please try again.");
+        Alert.alert("Missing link", "This link is not configured.");
+        return;
+    }
+    // Don't pre-check with canOpenURL: on Android 11+ it returns false for
+    // schemes not declared in the manifest <queries>, even when the link opens fine.
+    try {
+        await Linking.openURL(url);
+    } catch {
+        if (fallbackUrl) {
+            try {
+                await Linking.openURL(fallbackUrl);
+                return;
+            } catch {}
+        }
+        Alert.alert("Unable to open link", "Please try again.");
+    }
 };
 
 
@@ -260,7 +270,7 @@ const DonationScreen: React.FC = () => {
                 value={`@${donations?.venmoInfo ?? "loading..."}`} 
                 />
                 <View className="gap-2 mt-1">
-                    <ActionButton label="Open Venmo Profile Page" onPress={() => donations?.venmoURL && openLink(donations.venmoURL)} />
+                    <ActionButton label="Open Venmo Profile Page" onPress={() => donations?.venmoURL && openLink(donations.venmoURL, venmoWeb)} />
                 </View>
                 <View className="flex-row gap-2 mt-1">
                     <SmallActionButton label="Share Link"
